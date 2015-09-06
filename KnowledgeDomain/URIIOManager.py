@@ -1,10 +1,10 @@
 __author__ = 'Jonathan Langens'
 
-from KnowledgeDomain.URIIO import URIIO
-from KnowledgeDomain.URIIOCriteria import URIIOCriteria
+from URIIO import URIIO
+from URIIOCriteria import URIIOCriteria
 
 """
-@classname URIDomain
+@classname URIManager
 @author Jonathan Langens
 @created 18/08/2015
 @version 0.01
@@ -63,7 +63,7 @@ class URIIOManager:
         uriios = newuriiolist
         return URIIOCriteria(uriios)
 
-    def print(self):
+    def printURIIOManager(self):
         tl = self.asPredicateList()
         for t in tl:
-            t.print()
+            t.printTriple()

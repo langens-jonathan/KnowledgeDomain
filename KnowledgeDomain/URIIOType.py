@@ -227,7 +227,7 @@ class URIIOCondensedType:
                 return True
         return False
 
-    def print(self):
+    def printType(self):
         print("type: " + self.type)
         print("| supertypes: ")
         for st in self.supertypes:

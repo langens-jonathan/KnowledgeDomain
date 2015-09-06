@@ -1,6 +1,6 @@
 __author__ = 'Jonathan Langens'
-from KnowledgeDomain.URIIO import URIProperty
-from KnowledgeDomain.URIIO import URIPredicate
+from URIIO import URIProperty
+from URIIO import URIPredicate
 
 class URIIOCriteria:
 

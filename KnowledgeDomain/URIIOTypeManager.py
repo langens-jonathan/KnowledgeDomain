@@ -1,5 +1,6 @@
 __author__ = 'Jonathan Langens'
-from KnowledgeDomain.URIIOType import URIIOType
+from URIIOType import URIIOType
+from URIIOTypeCriteria import URIIOTypeCriteria
 
 """
 @classname URIIOTypeManager
@@ -61,7 +62,7 @@ class URIIOTypeManager:
     @post a new type is added to the type tree and to the dictionary
     @return the new type
     """
-    def getNewURIIO(self, parent, name):
+    def getNewURIIOType(self, parent, name):
         p = self.getType(parent)
         nType = URIIOType(p, name)
         self.typeDictionary[name] = nType
@@ -82,6 +83,18 @@ class URIIOTypeManager:
             return
         enewParent.children.append(etype)
         etype.parent = enewParent
+
+    """
+    @description returns a criteria list that is query-able by the criteria class
+    """
+    def getCriteria(self):
+        cTypeList = []
+
+        for k in self.typeDictionary.keys():
+            cTypeList.append(self.getType(k))
+
+
+        return URIIOTypeCriteria(cTypeList)
 
     """
     @description initializes a dictionary with basic types
@@ -130,7 +143,7 @@ class URIIOTypeManager:
     """
     @description prints all types that are in this dictionary as a tree WITH all properties etc added
     """
-    def print(self):
+    def printTypeManager(self):
         self.__print__(self.getType("type"), "")
 
 

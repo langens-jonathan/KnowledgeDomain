@@ -1,5 +1,5 @@
 __author__ = 'Jonathan Langens'
-from KnowledgeDomain.URIIOType import  URIIOType
+from URIIOType import  URIIOType
 
 """
 @classname URIIOTypeCriteria
@@ -24,7 +24,7 @@ class URIIOTypeCriteria:
     def __clearBasedOnType__(self):
         list = []
         for tp in self.typeList:
-            if not tp.isOfType(self.type):
+            if not tp.isOfType(self.type.type):
                 list.append(tp)
         for tp in list:
             self.typeList.remove(tp)
@@ -52,3 +52,28 @@ class URIIOTypeCriteria:
             self.__clearBasedOnType__()
         self.__clearBasedOnAtomicProperties__()
         self.__clearBasedOnTypeProperty__()
+
+    def asXML(self):
+        xmlString = "<types>"
+        for tp in self.typeList:
+            xmlString += "<type>"
+            xmlString += "<name>" + tp.type + "</name>"
+            parentName = ""
+            if tp.parent is not None:
+                parentName = tp.parent.type
+            xmlString += "<parent>" + parentName + "</parent>"
+            xmlString += "<atomicProperties>"
+            for ap in tp.atomicProperties:
+                xmlString += "<atomicProperty>" + ap + "</atomicProperty>"
+            xmlString += "</atomicProperties>"
+            lockedString = "0"
+            if tp.locked:
+                lockedString = "1"
+            xmlString += "<locked>" + lockedString + "</locked>"
+            sysDefString = "0"
+            if tp.systemDefined:
+                sysDefString = "1"
+            xmlString += "<systemDefined>" + sysDefString + "</systemdDefined>"
+            xmlString += "</type>"
+        xmlString += "</types>"
+        return xmlString

@@ -153,5 +153,5 @@ class simpleTriple:
         self.predicate = predicate
         self.object = object
 
-    def print(self):
+    def printTriple(self):
         print(self.subject + ' ' + self.predicate + ' ' + self.object)
