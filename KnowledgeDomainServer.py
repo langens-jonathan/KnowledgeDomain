@@ -5,7 +5,7 @@ from KnowledgeDomainServer.KDSQueryParser import ParseQuery
 import socket
 
 HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 7878 # Arbitrary non-privileged port
+PORT = 4578 # Arbitrary non-privileged port
 
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -1,5 +1,6 @@
 __author__ = 'Jonathan Langens'
 from URIIOPredicateDefinition import URIIOPredicateDefinition
+from URIIOPredicateDefinitionCriteria import  URIIOPredicateDefinitionCriteria
 from URIIOTypeManager import URIIOTypeManager
 from URIIOType import URIIOType
 
@@ -37,6 +38,8 @@ class URIIOPredicateDefinitionManager:
         obj = self.typeManager.getType(object)
         pred = self.getPredicate(name)
         if pred is not None:
+            if pred.systemDefined:
+                return
             pred.description = description
             pred.reflective = reflective
             pred.transitive = transitive
@@ -44,3 +47,9 @@ class URIIOPredicateDefinitionManager:
             pred.object = obj
         else:
             self.predicates.append(URIIOPredicateDefinition(name, description, reflective, transitive, sub, obj, False))
+
+    def getCriteria(self):
+        predlist = []
+        for p in self.predicates:
+            predlist.append(p)
+        return URIIOPredicateDefinitionCriteria(predlist)

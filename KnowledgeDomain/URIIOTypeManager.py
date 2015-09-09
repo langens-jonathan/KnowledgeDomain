@@ -47,9 +47,9 @@ class URIIOTypeManager:
     @post the type is deleted from the dictionary and the type tree
     """
     def delete(self, type):
-        if type.systemDefined:
-            return
         etype = self.getType(type)
+        if etype.systemDefined:
+            return
         if len(etype.children) == 0:
             if type in self.typeDictionary:
                 del self.typeDictionary[type]
@@ -63,8 +63,7 @@ class URIIOTypeManager:
     @return the new type
     """
     def getNewURIIOType(self, parent, name):
-        p = self.getType(parent)
-        nType = URIIOType(p, name)
+        nType = URIIOType(parent, name)
         self.typeDictionary[name] = nType
         return nType
 
@@ -83,6 +82,45 @@ class URIIOTypeManager:
             return
         enewParent.children.append(etype)
         etype.parent = enewParent
+
+    """
+    @param type a fully initialized URIIOType that needs to be saved
+    @post if type.type exists in the typeDictionary we alter it so it fits the passed type desription
+          otherwise we create a new type
+    @return the altered or new type
+    """
+    def saveType(self, type):
+        if type.type in self.typeDictionary:
+            # the type already exists so we retrieve it
+            inDictType = self.getType(type.type)
+            # then we reset its type properties and fill them again from the to save type
+            inDictType.typeProperties = []
+            for tp in type.typeProperties:
+                inDictType.typeProperties.append(tp)
+            # next reset the atomic properties
+            inDictType.atomicProperties = []
+            for ap in type.atomicProperties:
+                inDictType.atomicProperties.append(ap)
+            # then we set the locked flag
+            inDictType.locked = type.locked
+            # lastly we switch the parent
+            if not type.parent == inDictType.parent:
+                if type.parent is not None:
+                    self.switchParents(inDictType.type, type.parent.type)
+            return inDictType
+        elif type.parent is None:
+            return "<failed>The entered type description did not provide an acceptabel parent type.</failed>"
+        else:
+            nType = self.getNewURIIOType(type.parent, type.type)
+            for tp in type.typeProperties:
+                nType.typeProperties.append(tp)
+            for ap in type.atomicProperties:
+                nType.atomicProperties.append(ap)
+            nType.locked = type.locked
+
+            return nType
+
+
 
     """
     @description returns a criteria list that is query-able by the criteria class

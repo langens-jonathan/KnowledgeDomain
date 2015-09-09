@@ -62,3 +62,22 @@ class URIIOPredicateDefinitionCriteria:
             self.__clearBasedOnSubject__()
         if self.object is not None:
             self.__clearBasedOnObject__()
+
+    def asXML(self):
+        output = "<predicateDefinitions>"
+        for p in self.predicateList:
+            output += "<predicateDefinition>"
+            output += "<name>" + p.name + "</name>"
+            ref = "true"
+            if p.reflective is False:
+                ref = "false"
+            output += "<reflective>" + ref + "</reflective>"
+            tran = "true"
+            if p.transitive is False:
+                tran = "false"
+            output += "<transitive>" + tran + "</transitive>"
+            output += "<subject>" + p.subject.type + "</subject>"
+            output += "<object>" + p.object.type + "</object>"
+            output += "</predicateDefinition>"
+        output += "</predicateDefinitions>"
+        return output

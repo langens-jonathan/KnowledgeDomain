@@ -25,7 +25,7 @@ class KnowledgeDomain:
         self.domain = name
         self.URIIOManager = URIIOManager(self.domain)
         self.typeManager = URIIOTypeManager()
-        self.predicateManager = URIIOPredicateDefinitionManager(self.typeManager)
+        self.predicateDefinitionManager = URIIOPredicateDefinitionManager(self.typeManager)
 
     """
     @description simple helper function that allows the domain to be easily printed to the terminal
@@ -35,6 +35,6 @@ class KnowledgeDomain:
         print("type hierarchy")
         self.typeManager.printTypeManager()
         print("predicates")
-        self.predicateManager.printPredicateDefinitionManager()
+        self.predicateDefinitionManager.printPredicateDefinitionManager()
         print("URIIO's")
         self.URIIOManager.printURIIOManager()

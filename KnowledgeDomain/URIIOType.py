@@ -115,8 +115,10 @@ class URIIOType:
         if len(self.children) > 0:
             parent = self
         evolution = URIIOType(parent, self.type + "x")
-        evolution.typeProperties = self.typeProperties.copy()
-        evolution.atomicProperties = self.atomicProperties.copy()
+        for tp in self.typeProperties:
+            evolution.typeProperties.append(tp)
+        for ap in self.atomicProperties:
+            evolution.atomicProperties.append(ap)
         return evolution
 
     def purge(self):
