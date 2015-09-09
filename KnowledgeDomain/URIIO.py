@@ -21,39 +21,25 @@ class URIIO:
     """
     def __init__(self, URI):
         self.URI = URI
-        # self.ontae = []
-        # self.ontae.append("URIIO")
+        self.type = []
         self.properties = []
         self.predicates = []
 
     """
-    @param ontos the type that will be added to the list of types. We consider the latest passed type as the most defini
-    te
-    @pre self.ontae contains all more general types that the object has
-    @post self.ontae.last = ontos
+    @param type a type object that is known in the type dictionary of this domain
+    @post this URIIO has only 1 type and that is the type passed. we KNOW the URIIO IS of this type.
     """
+    def setType(self, type):
+        self.type = []
+        self.type.append(type)
+
     """
-    def addOntos(self, ontos):
-        self.ontae.append(ontos)
-    """
-    """
-    @param type the type that will be added to the list of types. We consider the latest passed type as the most definit
-    e
-    @pre self.ontae contains all more general types that the object has
-    @post self.ontae.last = type
-    """
+    @param type a type object that is known in the type dictionary of this domain
+    @post the passed type is added to this URIIO's type list, another possibility of this URIIO's type is added
     """
     def addType(self, type):
-        self.ontae.append(type)
-    """
-    """
-    @param ontae a list of types that will be used as the type list, the list item in this list is the definite type
-    @post self.ontae.last = type
-    """
-    """
-    def setOntae(self, ontae):
-        self.ontae = ontae
-    """
+        self.type.append(type)
+
     """
     @param name the name of the property (i.e. for car.color we would use "color" for the name)
     @param value the value of the property(i.e. for a red color we would use "red" for the value)
@@ -94,26 +80,6 @@ class URIIO:
     """
     def addPredicate(self, predicate, object):
         self.predicates.append(URIPredicate(predicate, object))
-
-    """
-    @description this function converts the this URIIO to a list of simple triples
-    """
-    def convertToTriples(self):
-        triples = []
-
-        # first convert the ontae to triples
-        #for ontos in self.ontae:
-        #    triples.append(simpleTriple(self.URI, "isOfType", ontos))
-
-        # then convert all the properties to triples
-        for property in self.properties:
-            triples.append(simpleTriple(self.URI, property.name, property.value))
-
-        # lastly convert the predicates
-        for predicate in self.predicates:
-            triples.append(simpleTriple(self.URI, predicate.predicate.URI, predicate.object.URI))
-
-        return triples
 
 
 """

@@ -20,7 +20,6 @@ class URIIOManager:
     @post the domain initializes the URIIO list and sets its URI counter to 0
     """
     def __init__(self, domain):
-        print("created domain: " + domain)
         self.domain = domain
         self.uricounter = 0
         self.URIIOs = []
@@ -44,24 +43,11 @@ class URIIOManager:
         return uri
 
     """
-    @description This function returns all URIIO's in this domain as one list of predicates
-    """
-    def asPredicateList(self):
-        predlist = []
-        for uriio in self.URIIOs:
-            predlist.extend(uriio.convertToTriples())
-        return predlist
-
-    """
     @description returns a new criteria object that is instantiated to contain all objects that are part of the current
     world
     """
     def newCriteria(self):
-        newuriiolist = []
-        for uriio in self.URIIOs:
-            newuriiolist.append(uriio)
-        uriios = newuriiolist
-        return URIIOCriteria(uriios)
+        return URIIOCriteria(self.URIIOs)
 
     def printURIIOManager(self):
         tl = self.asPredicateList()
