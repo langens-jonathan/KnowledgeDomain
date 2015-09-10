@@ -44,6 +44,7 @@ class URIIOCriteria:
                         return False
         return True
 
+    # REWRITE THIS SHOULD CONSIDER THE OBJECT TO BE ANOTHER URIIO!!! AND NOT A TYPE
     def __passesPredicateRestrictionList__(self, uriio):
         for pred in self.PredicateRestrictions:
             if pred.predicate is not None:
@@ -96,6 +97,12 @@ class URIIOCriteria:
 
         toRemove.clear()
 
-
     def getURIIOs(self):
         return self.URIIOList
+
+    def asXML(self):
+        toreturn = "<URIIOS>"
+        for u in self.URIIOList:
+            toreturn += u.asXML()
+        toreturn += "</URIIOS>"
+        return toreturn

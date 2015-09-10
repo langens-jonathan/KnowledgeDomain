@@ -46,8 +46,11 @@ class URIIOManager:
     @description returns a new criteria object that is instantiated to contain all objects that are part of the current
     world
     """
-    def newCriteria(self):
-        return URIIOCriteria(self.URIIOs)
+    def getCriteria(self):
+        ulist = []
+        for u in self.URIIOs:
+            ulist.append(u)
+        return URIIOCriteria(ulist)
 
     def printURIIOManager(self):
         tl = self.asPredicateList()

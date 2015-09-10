@@ -14,23 +14,38 @@ def ParseQuery(query):
     #
     # URIIO related stuff
     #
-    if root.tag == "uriQuery":
-        return processURIQuery(root)
+    if root.tag == "URIIOQuery":
+        return processURIIOQuery(root)
+    elif root.tag == "actionURIIONew":
+        return processURIIONew(root)
+    elif root.tag == "actionURIIODelete":
+        return processURIIODelete(root)
+    elif root.tag == "actionURIIOAddProperty":
+        return processURIIOAddProperty(root)
+    elif root.tag == "actionURIIORemoveProperty":
+        return processURIIORemoveProperty(root)
+    elif root.tag == "actionURIIOAddPredicate":
+        return processURIIOAddPredicate(root)
+    elif root.tag == "actionURIIORemovePredicate":
+        return processURIIORemovePredicate(root)
+
 
     #
     # Predicate Definition related stuff
     #
     elif root.tag == "predicateDefinitionQuery":
         return processPredicateDefinitionQuery(root)
-    elif root.tag == "predicateDefinition":
+    elif root.tag == "actionPredicateDefinition":
         return processPredicateDefinition(root)
+    elif root.tag == "actionPredicateDefinitionDelete":
+        return processPredicateDefinitionDelete(root)
 
     #
     # URIIO TYPE related stuff
     #
-    elif root.tag == "uriioTypeQuery":
+    elif root.tag == "URIIOTypeQuery":
         return processURIIOTypeQuery(root)
-    elif root.tag == "uriioCondensedTypeQuery":
+    elif root.tag == "URIIOCondensedTypeQuery":
         return processURIIOCondensedTypeQuery(root)
     elif root.tag == "actionURIIOTypePurge":
         return processURIIOTypePurge(root)
@@ -43,8 +58,63 @@ def ParseQuery(query):
 
     return "unable to process query of type: " + root.tag + "\nFor more info on queries consult the documentation."
 
+#
+# URIIO Related stuff
+#
 
-def processURIQuery(root):
+def processURIIOQuery(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    criteria = kd.URIIOManager.getCriteria()
+
+    for child in root:
+        if child.tag == "type":
+            criteria.TypeRestrictions.append(child.text)
+        elif child.tag == "property":
+            name = ""
+            value = ""
+            for propdef in child:
+                if propdef.tag == "name":
+                    name = propdef.text
+                elif propdef.tag == "value":
+                    value = propdef.text
+            criteria.addPropertyRestriction(name, value)
+        elif child.tag == "predicate":
+            pred = ""
+            obj = ""
+            for preddef in child:
+                if preddef.tag == "name":
+                    pred = preddef.text
+                elif preddef.tag == "object":
+                    obj = preddef.text
+            criteria.addPredicateRestrition(pred, obj)
+        elif child.tag == "uriio":
+            criteria.addURIRestriction(child.text)
+
+    criteria.resolve()
+
+    return criteria.asXML()
+
+
+def processURIIONew(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uriio = kd.URIIOManager.newURIIO()
+    return uriio.asXML()
+
+def processURIIODelete(root):
+    return root.tag
+
+def processURIIOAddProperty(root):
+    return root.tag
+
+def processURIIORemoveProperty(root):
+    return root.tag
+
+def processURIIOAddPredicate(root):
+    return root.tag
+
+def processURIIORemovePredicate(root):
     return root.tag
 
 #
@@ -113,6 +183,10 @@ def processPredicateDefinition(root):
 
     kd.predicateDefinitionManager.addPredicate(name, description, reflective, transitive, subject, object)
     return "<success></success>"
+
+
+def processPredicateDefinitionDelete(root):
+    return root.tag
 
 #
 # URIIO TYPE related stuff

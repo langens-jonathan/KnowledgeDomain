@@ -81,6 +81,26 @@ class URIIO:
     def addPredicate(self, predicate, object):
         self.predicates.append(URIPredicate(predicate, object))
 
+    def asXML(self):
+        toreturn = "<URIIO>"
+        toreturn += "<URI>" + u.URI + "</URI>"
+        toreturn += "<types>"
+        for t in self.type:
+            toreturn += "<type>" + t.type + "</type>"
+        toreturn += "</types>"
+        toreturn += "<properties>"
+        for p in self.properties:
+            toreturn += "<property><name>" + p.name + "</name>"
+            toreturn += "<value>" + p.value + "</value></property>"
+        toreturn += "</properties>"
+        toreturn += "<predicates>"
+        for p in self.predicates:
+            toreturn += "<predicate><name>" + p.name + "</name>"
+            toreturn += "<object>" + p.object + "</object></predicate>"
+        toreturn += "</predicates>"
+        toreturn += "</URIIO>"
+        return toreturn
+
 
 """
 @classname URI Property
