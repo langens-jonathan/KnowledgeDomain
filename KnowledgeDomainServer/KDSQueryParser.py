@@ -9,7 +9,22 @@ from KnowledgeDomain.URIIOTypeCriteria import URIIOTypeCriteria
 from KnowledgeDomain.URIIOPredicateDefinitionCriteria import URIIOPredicateDefinitionCriteria
 """
 def ParseQuery(query):
-    root = ET.fromstring(query)
+    base = ET.fromstring(query)
+
+    usr = ""
+    pwd = ""
+    root = None
+    for child in base:
+        if child.tag == "user":
+            usr = child.text
+        elif child.tag == "password":
+            pwd = child.text
+        elif child.tag == "query":
+            for ch in child:
+                root = ch
+
+    if not usr == "jonathan" or not pwd == "is de beste":
+        return "<failed>U have not authenticated</failed>"
 
     #
     # URIIO related stuff
@@ -24,10 +39,14 @@ def ParseQuery(query):
         return processURIIOAddProperty(root)
     elif root.tag == "actionURIIORemoveProperty":
         return processURIIORemoveProperty(root)
-    elif root.tag == "actionURIIOAddPredicate":
-        return processURIIOAddPredicate(root)
-    elif root.tag == "actionURIIORemovePredicate":
-        return processURIIORemovePredicate(root)
+    elif root.tag == "actionURIIOAddType":
+        return processURIIOAddType(root)
+    elif root.tag == "actionURIIOSetType":
+        return processURIIOSetType(root)
+    elif root.tag == "actionURIIORemoveType":
+        return processURIIORemoveType(root)
+    elif root.tag == "cardinalityForURIIO":
+        return processCardinalityForURIIO(root)
 
 
     #
@@ -55,6 +74,20 @@ def ParseQuery(query):
         return processURIIOTypeDelete(root)
     elif root.tag == "actionURIIOTypeSave":
         return processURIIOTypeSave(root)
+
+    #
+    # Predicate Related stuff
+    #
+
+    elif root.tag == "predicateQuery":
+        return processPredicateQuery(root)
+    elif root.tag == "predicateURIQuery":
+        return processPredicateURIQuery(root)
+    elif root.tag == "actionAddPredicate":
+        return processAddPredicate(root)
+    elif root.tag == "actionRemovePredicate":
+        return processRemovePredicate(root)
+
 
     return "unable to process query of type: " + root.tag + "\nFor more info on queries consult the documentation."
 
@@ -103,19 +136,102 @@ def processURIIONew(root):
     return uriio.asXML()
 
 def processURIIODelete(root):
-    return root.tag
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    for child in root:
+        if child.tag == "URI":
+            kd.URIIOManager.removeURIIO(child.text)
+    return "<success></sucess>"
 
 def processURIIOAddProperty(root):
-    return root.tag
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    propname = ""
+    propvalue = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+        elif child.tag == "property":
+            for propdef in child:
+                if propdef.tag == "name":
+                    propname = propdef.text
+                elif propdef.tag == "value":
+                    propvalue = propdef.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    uriio.addProperty(propname, propvalue)
+    return "<success></sucess>"
 
 def processURIIORemoveProperty(root):
-    return root.tag
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    propname = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+        elif child.tag == "property":
+            for propdef in child:
+                if propdef.tag == "name":
+                    propname = propdef.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    uriio.removeProperty(propname)
+    return "<success></sucess>"
 
-def processURIIOAddPredicate(root):
-    return root.tag
+def processURIIOAddType(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    type = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+        elif child.tag == "type":
+            type = child.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    uriio.type.append(kd.typeManager.getType(type))
+    return "<success></sucess>"
 
-def processURIIORemovePredicate(root):
-    return root.tag
+def processURIIOSetType(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    type = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+        elif child.tag == "type":
+            type = child.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    uriio.type = []
+    uriio.type.append(kd.typeManager.getType(type))
+    return "<success></sucess>"
+
+def processURIIORemoveType(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    type = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+        elif child.tag == "type":
+            type = child.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    tp = kd.typeManager.getType(type)
+    uriio.type.remove(tp)
+    return "<success></sucess>"
+
+def processCardinalityForURIIO(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    if uriio is not None:
+        return "<cardinality><uri>" + uri + "</uri><cardinality>" + str(kd.predicateManager.getCardinality(uriio)) + "</cardinality></cardinality>"
 
 #
 # Predicate Definition related stuff
@@ -186,7 +302,13 @@ def processPredicateDefinition(root):
 
 
 def processPredicateDefinitionDelete(root):
-    return root.tag
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    for child in root:
+        if child.tag == "name":
+            kd.predicateDefinitionManager.deletePredicate(child.text)
+            return "<success></success>"
+    return "<failed>You have to include a name tag to your query.</failed>"
 
 #
 # URIIO TYPE related stuff
@@ -283,3 +405,100 @@ def processURIIOTypeSave(root):
             kd.typeManager.saveType(nType)
 
     return kd.typeManager.getCriteria().asXML()
+
+#
+# Predicate Related Stuff
+#
+def processPredicateQuery(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    predname = ""
+    for child in root:
+        if child.tag == "predicate":
+            predname = child.text
+    preddef = kd.predicateDefinitionManager.getPredicate(predname)
+    if preddef is None:
+        return "<failed>The predicate with name '" + predname + "' does not exist in this Knowledge Domain.</failed>"
+    list = kd.predicateManager.getPredicatesForPredicateDefinition(preddef)
+    output = "<predicates>"
+    for p in list:
+        output += "<predicate>"
+        output += "<subject>" + p.subject.type + "</subject>"
+        output += "<predicate>" + p.predicate.name + "</predicate>"
+        output += "<object>" + p.object.type + "</object>"
+        output += "</predicate>"
+    output += "</predicates>"
+    return output
+
+def processPredicateURIQuery(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    uri = ""
+    for child in root:
+        if child.tag == "uri":
+            uri = child.text
+    uriio = kd.URIIOManager.getURIIO(uri)
+    if uriio is None:
+        return "<failed>The URIIO with URI '" + uri + "' does not exist in this Knowledge Domain.</failed>"
+    list = kd.predicateManager.getPredicatesForURIIO(uriio)
+    output = "<predicates>"
+    for p in list:
+        output += "<predicate>"
+        output += "<subject>" + p.subject.type + "</subject>"
+        output += "<predicate>" + p.predicate.name + "</predicate>"
+        output += "<object>" + p.object.type + "</object>"
+        output += "</predicate>"
+    output += "</predicates>"
+    return output
+
+def processAddPredicate(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    suburi = ""
+    objuri = ""
+    predname = ""
+    for child in root:
+        if child.tag == "subject":
+            suburi = child.text
+        elif child.tag == "object":
+            objuri = child.text
+        elif child.tag == "predicate":
+            predname = child.text
+    sub = kd.URIIOManager.getURIIO(suburi)
+    if sub is None:
+        return "<failed>Subject with URI " + suburi + "is not known in this Knowledge Domain</failed>"
+    obj = kd.URIIOManager.getURIIO(objuri)
+    if obj is None:
+        return "<failed>Subject with URI " + objuri + "is not known in this Knowledge Domain</failed>"
+    pred = kd.predicateDefinitionManager.getPredicate(predname)
+    if pred is None:
+        return "<failed>Predicate with name " + predname + " is not known in this Knowledge Domain</failed>"
+    kd.predicateManager.addPredicate(sub, pred, obj)
+
+    return "<success></success>"
+
+def processRemovePredicate(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+    suburi = ""
+    objuri = ""
+    predname = ""
+    for child in root:
+        if child.tag == "subject":
+            suburi = child.text
+        elif child.tag == "object":
+            objuri = child.text
+        elif child.tag == "predicate":
+            predname = child.text
+    sub = kd.URIIOManager.getURIIO(suburi)
+    if sub is None:
+        return "<failed>Subject with URI " + suburi + "is not known in this Knowledge Domain</failed>"
+    obj = kd.URIIOManager.getURIIO(objuri)
+    if obj is None:
+        return "<failed>Subject with URI " + objuri + "is not known in this Knowledge Domain</failed>"
+    pred = kd.predicateDefinitionManager.getPredicate(predname)
+    if pred is None:
+        return "<failed>Predicate with name " + predname + " is not known in this Knowledge Domain</failed>"
+    kd.predicateManager.removePredicate(sub, pred, obj)
+
+    return "<success></success>"

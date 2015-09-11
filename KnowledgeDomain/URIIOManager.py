@@ -25,6 +25,20 @@ class URIIOManager:
         self.URIIOs = []
 
     """
+    """
+    def getURIIO(self, uri):
+        for u in self.URIIOs:
+            if u.URI == uri:
+                return u
+        return None
+
+    def removeURIIO(self, uri):
+        for u in self.URIIOs:
+            if u.URI == uri:
+                self.URIIOs.remove(u)
+                return
+
+    """
     @description This function returns a new URIIO instance that then can be modified to represent what it should. The U
     RIIO is also added to this domains list of URIIO's. This function is the only way to add URIIO's to this domain.
     """
@@ -52,6 +66,10 @@ class URIIOManager:
             ulist.append(u)
         return URIIOCriteria(ulist)
 
+
+    """
+    @description helper function that quickly prints all URIIO's in this manager to the terminal
+    """
     def printURIIOManager(self):
         tl = self.asPredicateList()
         for t in tl:

@@ -48,8 +48,20 @@ class URIIOPredicateDefinitionManager:
         else:
             self.predicates.append(URIIOPredicateDefinition(name, description, reflective, transitive, sub, obj, False))
 
+    def deletePredicate(self, name):
+        for p in self.predicates:
+            if p.name == name:
+                self.predicates.remove(p)
+                return
+
     def getCriteria(self):
         predlist = []
         for p in self.predicates:
             predlist.append(p)
         return URIIOPredicateDefinitionCriteria(predlist)
+
+    def getPredicate(self, predname):
+        for p in self.predicates:
+            if p.name == predname:
+                return p
+        return None

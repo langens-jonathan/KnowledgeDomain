@@ -23,7 +23,6 @@ class URIIO:
         self.URI = URI
         self.type = []
         self.properties = []
-        self.predicates = []
 
     """
     @param type a type object that is known in the type dictionary of this domain
@@ -93,11 +92,13 @@ class URIIO:
             toreturn += "<property><name>" + p.name + "</name>"
             toreturn += "<value>" + p.value + "</value></property>"
         toreturn += "</properties>"
+        """
         toreturn += "<predicates>"
         for p in self.predicates:
             toreturn += "<predicate><name>" + p.name + "</name>"
             toreturn += "<object>" + p.object + "</object></predicate>"
         toreturn += "</predicates>"
+        """
         toreturn += "</URIIO>"
         return toreturn
 
@@ -113,31 +114,3 @@ class URIProperty:
     def __init__(self, name, value):
         self.name = name
         self.value = value
-
-"""
-@classname URI Predicate
-@author Jonathan Langens
-@created 17/08/2015
-@version 0.01
-@description a small helper class that defines a predicate's predicate and object as 2 URIIO's
-"""
-class URIPredicate:
-    def __init__(self, predicate, object):
-        self.predicate = predicate
-        self.object = object
-
-"""
-@classname simple triple
-@author Jonathan Langens
-@created 17/08/2015
-@version 0.01
-@description a small helper class that defines a simple triple as 3 strings and that provides a function to print it
-"""
-class simpleTriple:
-    def __init__(self, subject, predicate, object):
-        self.subject = subject
-        self.predicate = predicate
-        self.object = object
-
-    def printTriple(self):
-        print(self.subject + ' ' + self.predicate + ' ' + self.object)

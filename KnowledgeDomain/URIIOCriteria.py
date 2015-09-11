@@ -1,6 +1,5 @@
 __author__ = 'Jonathan Langens'
 from URIIO import URIProperty
-from URIIO import URIPredicate
 
 class URIIOCriteria:
 
@@ -17,8 +16,9 @@ class URIIOCriteria:
     def addPropertyRestriction(self, name, value):
         self.PropertyRestrictions.append(URIProperty(name, value))
 
-    def addPredicateRestriction(self, predicate, object):
-        self.PredicateRestrictions.append((URIPredicate(predicate, object)))
+    def addPredicateRestriction(self, subjet, predicate, object):
+        #self.PredicateRestrictions.append((URIPredicate(predicate, object)))
+        test = 1
 
     def __URIRestrictionListContains__(self, uri):
         for urii in self.URIRestrictions:
@@ -87,11 +87,11 @@ class URIIOCriteria:
             self.URIIOList.remove(uriio)
 
         toRemove.clear()
-
+        """
         for uriio in self.URIIOList:
             if not self.__passesPredicateRestrictionList__(uriio):
                 toRemove.append(uriio)
-
+        """
         for uriio in toRemove:
             self.URIIOList.remove(uriio)
 
