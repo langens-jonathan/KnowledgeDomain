@@ -23,7 +23,7 @@ while True:
     print("connected to " + str(address))
 
     query = recv_msg(client_socket)
-
+    print(query)
     print("received following query:\n" + query)
 
     result = ParseQuery(query)

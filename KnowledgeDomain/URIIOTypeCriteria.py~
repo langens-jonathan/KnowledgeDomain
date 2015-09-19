@@ -1,22 +1,6 @@
 __author__ = 'Jonathan Langens'
 from URIIOType import  URIIOType
-"""
-Copyright (C) 2015  Langens Jonathan
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-"""
 """
 @classname URIIOTypeCriteria
 @author Jonathan Langens
@@ -36,17 +20,12 @@ class URIIOTypeCriteria:
         self.type = None
         self.atomicProperties = []
         self.typeProperties = []
-        self.exactType = False
 
     def __clearBasedOnType__(self):
         list = []
         for tp in self.typeList:
-            if not self.exactType:
-                if not tp.isOfType(self.type.type):
-                    list.append(tp)
-            else:
-                if not tp.type == self.type.type:
-                    list.append(tp)
+            if not tp.isOfType(self.type.type):
+                list.append(tp)
         for tp in list:
             self.typeList.remove(tp)
 
@@ -94,7 +73,7 @@ class URIIOTypeCriteria:
             sysDefString = "0"
             if tp.systemDefined:
                 sysDefString = "1"
-            xmlString += "<systemDefined>" + sysDefString + "</systemDefined>"
+            xmlString += "<systemDefined>" + sysDefString + "</systemdDefined>"
 	    xmlString += "<children>"
 	    for ch in tp.children:
 		xmlString += "<child>" + ch.type + "</child>"

@@ -4,21 +4,9 @@ import xml.etree.cElementTree as ET
 from KnowledgeDomain.KnowledgeDomainManager import KnowledgeDomainManager
 from KnowledgeDomain.URIIOType import URIIOType
 """
-Copyright (C) 2015  Langens Jonathan
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+from KnowledgeDomain.URIIOCriteria import URIIOCriteria
+from KnowledgeDomain.URIIOTypeCriteria import URIIOTypeCriteria
+from KnowledgeDomain.URIIOPredicateDefinitionCriteria import URIIOPredicateDefinitionCriteria
 """
 def ParseQuery(query):
     base = ET.fromstring(query)
@@ -341,12 +329,9 @@ def processURIIOTypeQuery(root):
     for child in root:
         if child.tag == "name":
             ctp = kd.typeManager.getType(child.text)
+            print(child.text + " == " + ctp.type)
             if ctp is not None:
                 criteria.type = ctp
-            for ch in child:
-                if ch.tag == "exactType":
-                    if ch.text == "yes":
-                        criteria.exactType = True
 
         if child.tag == "atomicProperties":
             for aptag in child:
@@ -416,7 +401,7 @@ def processURIIOTypeEvolve(root):
     kdmanager = KnowledgeDomainManager()
     kd = kdmanager.getDomain()
     if kd.typeManager.getType(root.text) is None:
-        return "<failed>Passed type does not exist in the type dictionary.</failed>"
+        return "<failed>type " + root.text + " does not exist in the type dictionary.</failed>"
     kd.typeManager.evolve(root.text)
     return kd.typeManager.getCriteria().asXML()
 
@@ -448,7 +433,7 @@ def processURIIOTypeSave(root):
                     if p is not None:
                         nType.parent = p
                 elif ch.tag == "locked":
-                    if ch.text == "yes":
+                    if ch.text == "true":
                         nType.locked = True
                     else:
                         nType.locked = False
