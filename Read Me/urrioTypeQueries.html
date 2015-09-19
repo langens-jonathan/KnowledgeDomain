@@ -12,12 +12,12 @@
 The condensed type definition of malamute however is:(has the following properties:paws, tail, double undercoat, and parent: dog and condensed types:malamute, dog, animal).</p>
 <p>When a query for a condensed type is processed the reply is being generate at that instance, every time.</p>
 <h2>Queries</h2>
-<p>The query construction instructions that you can find below should be used to fill the <query></query> tags in a Knowledge Domain query. You should always correctly construct your <a href="baseQueries.html">base query</a>.</p>
+<p>The query construction instructions that you can find below should be used to fill the &ltquery&gt&lt/query&gt tags in a Knowledge Domain query. You should always correctly construct your <a href="baseQueries.html">base query</a>.</p>
 <h2>Type Query</h2>
 <p>The type query will return a list of types that adhere to certain specifications. For instance you can require the type to have some properties (ie having the property paws would return dog and malamute). You can also specify a type name as one of the specifications. Then the returned list will contain <b>all</b> types that are this type or a subtype of this type. If the exactType is required then the returned list will contain at most 1 type which is then this exact type</p>
-<p>The outer tags for this query should be <URIIOTypeQuery> tags. There are 2 subtages allowed: <name> and <atomicProperties>.</p>
-<p>Inside the name tags you should just put the name of the type you want the returned list to be restricted to. If you want only this <b>exact</b> type, you should insert a <exactType> tag with the text "yes" in.</p>
-<p>Between the atomicProperties tag all desired properties should be described between <atomicProperty> tags.</p>
+<p>The outer tags for this query should be &ltURIIOTypeQuery&gt tags. There are 2 subtages allowed: &ltname&gt and &ltatomicProperties&gt.</p>
+<p>Inside the name tags you should just put the name of the type you want the returned list to be restricted to. If you want only this <b>exact</b> type, you should insert a &ltexactType&gt tag with the text "yes" in.</p>
+<p>Between the atomicProperties tag all desired properties should be described between &ltatomicProperty&gt tags.</p>
 examples:
 <p>&ltURIIOTypeQuery&gt </br>
 &nbsp &ltname&gt </br> &nbsp &nbsp object </br> &nbsp &ltname&gt </br> &lt/URIIOTypeQuery&gt</p>
