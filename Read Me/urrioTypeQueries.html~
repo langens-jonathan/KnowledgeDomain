@@ -1,0 +1,30 @@
+<html>
+<head>
+<title>Knowledge Domain</title>
+</head>
+<body>
+<h1>Type Queries</h1>
+<h2>What is a type</h2>
+<p>A type is an enity description that has a parent type ('type' being the most general), and some properties. A type can be locked by the user of the knowledge domain. This will prevent <a href="purging.html">purging</a> to alter this type. Subtypes of this type <b>will</b> be affected by a purge action.</p>
+<p>Internally the types are held in a dictionary but they also retain a tree structure (parent/children) in which each type node can have only 1 parent.</p>
+<h2>What is a condensed type?</h2>
+<p>A condensed type is a 'full' type description. Consider for instance the following two types: dog (has the following properties:paws, tail, and parent: animal) and malamute (has the following properties:double undercoat, and parent:dog). The type definition for malamute would be what is written in the previous sentence after malamute.
+The condensed type definition of malamute however is:(has the following properties:paws, tail, double undercoat, and parent: dog and condensed types:malamute, dog, animal).</p>
+<p>When a query for a condensed type is processed the reply is being generate at that instance, every time.</p>
+<h2>Queries</h2>
+<p>The query construction instructions that you can find below should be used to fill the <query></query> tags in a Knowledge Domain query. You should always correctly construct your <a href="baseQueries.html">base query</a>.</p>
+<h2>Type Query</h2>
+<p>The type query will return a list of types that adhere to certain specifications. For instance you can require the type to have some properties (ie having the property paws would return dog and malamute). You can also specify a type name as one of the specifications. Then the returned list will contain <b>all</b> types that are this type or a subtype of this type. If the exactType is required then the returned list will contain at most 1 type which is then this exact type</p>
+<p>The outer tags for this query should be <URIIOTypeQuery> tags. There are 2 subtages allowed: <name> and <atomicProperties>.</p>
+<p>Inside the name tags you should just put the name of the type you want the returned list to be restricted to. If you want only this <b>exact</b> type, you should insert a <exactType> tag with the text "yes" in.</p>
+<p>Between the atomicProperties tag all desired properties should be described between <atomicProperty> tags.</p>
+examples:
+<p>&ltURIIOTypeQuery&gt </br>
+&nbsp &ltname&gt </br> &nbsp &nbsp object </br> &nbsp &ltname&gt </br> &lt/URIIOTypeQuery&gt</p>
+<p>&ltURIIOTypeQuery&gt </br> &nbsp  &ltname&gt </br>  &nbsp  &nbsp dog </br> &nbsp  &nbsp  &ltexactType&gt </br> &nbsp  &nbsp  &nbsp  yes </br> &nbsp  &nbsp  &lt/exactType&gt </br> &nbsp  &ltname&gt </br> &lt/URIIOTypeQuery&gt</p>
+<p>&ltURIIOTypeQuery&gt </br>  &nbsp &ltname&gt </br> &nbsp  &nbsp  dog </br> &nbsp  &ltname&gt </br> &nbsp  &ltatomicProperties&gt </br> &nbsp  &nbsp &ltatomicProperty&gt </br> &nbsp  &nbsp &nbsp   double undercoat </br>  &nbsp  &nbsp &lt/atomicProperty&gt </br>  &nbsp &lt/atomicProperties&gt </br> &lt/URIIOTypeQuery&gt</p>
+<p>"<URIIOTypeQuery><atomicProperties><atomicProperty>paws</atomicProperty></atomicProperties></URIIOTypeQuery>"</p>
+
+<h2>Condensed Type Query</h2> &nbsp  &nbsp 
+</body>
+</html>
