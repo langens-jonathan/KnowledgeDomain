@@ -374,7 +374,10 @@ def processURIIOCondensedTypeQuery(root):
         strsysdef = "yes"
     xmlStr += "<locked>" + strlocked + "</locked>"
     xmlStr += "<systemDefined>" + strsysdef + "</systemDefined>"
-    xmlStr += "<parent>" + nType.parent.type + "</parent>"
+    xmlStr += "<parent>"
+    if nType.parent is not None:
+         xmlStr += nType.parent.type
+    xmlStr += "</parent>"
     xmlStr += "<superTypes>"
     for st in cType.supertypes:
         xmlStr += "<superType>" + st + "</superType>"
