@@ -1,5 +1,5 @@
 __author__ = 'Jonathan Langens'
-from KnowledgeDomain.KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
+from KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -65,7 +65,7 @@ class URIIOType:
     """
     @description returns all properties this type has and all properties of all of its parent
     """
-    def asAtomicPropertyList(self):
+    def asPropertyList(self):
         list = []
         if self.parent != None:
             list.extend(self.parent.asAtomicPropertyList())
@@ -92,8 +92,31 @@ class URIIOType:
             if p.name == propertyname:
                 return True
         if self.parent is not None:
-            return self.parent.hasAtomicProperty(propertyname)
+            return self.parent.hasProperty(propertyname)
         return False
+
+    """
+    @param atomicProperty the name of the property we want to receive
+    @return the property
+    """
+    def getProperty(self, propertyname):
+        for p in self.properties:
+            if p.name == propertyname:
+                return p
+        if self.parent is not None:
+            return self.parent.hasAtomicProperty(propertyname)
+        return None
+
+    """
+    @param name the name of the property we want to add (or alter)
+    @param type the type of the named property
+    @result this type has a property with that name and that type
+    """
+    def addProperty(self, name, type = KnowledgeDomainDefinitions.TEXT):
+        if self.hasProperty(name):
+            self.getProperty(name).type = type
+        else:
+            self.properties.append(URIIOTypeProperty(name, type))
 
     """
     @param propertyname the name of the property that should be remove
@@ -122,8 +145,8 @@ class URIIOType:
     def condense(self):
         supertypes = self.asTypeList()
         supertypes.remove(self.type)
-        atomlist = self.asAtomicPropertyList()
-        condesed = URIIOCondensedType(self.type, supertypes, typelist, atomlist)
+        atomlist = self.asPropertyList()
+        condesed = URIIOCondensedType(self.type, supertypes, atomlist)
         return condesed
 
     def evolve(self):
@@ -203,14 +226,12 @@ its supertypes and has all properties it needs to have
 you can think of a
 """
 class URIIOCondensedType:
-    def __init__(self, type, supertypes, typeProperties, atomicProperties):
+    def __init__(self, type, supertypes, properties):
         self.type = type
         self.supertypes = supertypes
         # we want the type properties to be condensed in this case as well
         self.typeProperties = []
-        for uriiotype in typeProperties:
-            self.typeProperties.append(uriiotype.asCondensedType)
-        self.atomicProperties = atomicProperties
+        self.properties = properties
 
     def isOfType(self, type):
         if self.type == type:
@@ -220,15 +241,9 @@ class URIIOCondensedType:
                 return True
         return False
 
-    def hasAtomicProperty(self, prop):
-        for ap in self.atomicProperties:
-            if ap == prop:
-                return True
-        return False
-
-    def hasTypeProperty(self, prop):
-        for tp in self.typeProperties:
-            if tp.isOfType(prop.type):
+    def hasProperty(self, propertyname):
+        for ap in self.properties:
+            if ap.name == propertyname:
                 return True
         return False
 
@@ -239,10 +254,8 @@ class URIIOCondensedType:
             print("| - " + st)
         print("|")
         print("| properties:")
-        for ap in self.atomicProperties:
-            print("| * " + ap)
-        for tp in self.typeProperties:
-            print("| @ " + tp.type)
+        for ap in self.properties:
+            print("| * " + ap.name + "(" + ap.type + ")")
 
 """
 a URIIOType Property consists of a property name and a property type.

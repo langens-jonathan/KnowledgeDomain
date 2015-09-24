@@ -3,6 +3,7 @@ import xml.etree.cElementTree as ET
 
 from KnowledgeDomain.KnowledgeDomainManager import KnowledgeDomainManager
 from KnowledgeDomain.URIIOType import URIIOType
+from KnowledgeDomain.URIIOType import URIIOTypeProperty
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -441,7 +442,11 @@ def processURIIOTypeSave(root):
                 if ch.tag == "name":
                     nType.type = ch.text
                 elif ch.tag == "property":
-                    nType.properties.append(ch.text)
+                    prop = URIIOTypeProperty(ch.text)
+                    for c in ch:
+                        if c.tag == "type":
+                            prop.type = c.text
+                    nType.properties.append(prop)
                 elif ch.tag == "parent":
                     p = kd.typeManager.getType(ch.text)
                     if p is not None:

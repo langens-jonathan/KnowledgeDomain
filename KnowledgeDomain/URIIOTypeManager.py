@@ -173,7 +173,7 @@ class URIIOTypeManager:
         dic["object"] = obj
 
         dataSource = URIIOType(obj, "datasource")
-        dataSource.atomicProperties.append("location")
+        dataSource.addProperty("location")
         dic["datasource"] = dataSource
         datastore = URIIOType(dataSource, "datastore")
         dic["datastore"] = datastore
@@ -182,9 +182,9 @@ class URIIOTypeManager:
 
         person = URIIOType(obj, "person")
         dic["person"] = person
-        person.atomicProperties.append("first name")
-        person.atomicProperties.append("last name")
-        person.atomicProperties.append("date of birth")
+        person.addProperty("first name")
+        person.addProperty("last name")
+        person.addProperty("date of birth")
 
         employee = URIIOType(person, "employee")
         dic["employee"] = employee
@@ -207,10 +207,8 @@ class URIIOTypeManager:
     """
     def __print__(self, type, prefix):
         print(prefix + "-" + type.type)
-        for tp in type.typeProperties:
-            print(prefix + " * " + tp.type)
-        for ap in type.atomicProperties:
-            print(prefix + " * " + ap)
+        for ap in type.properties:
+            print(prefix + " * " + ap.name + " (" + ap.type + ")")
         for child in type.children:
             self.__print__(child, prefix + " | ")
 
