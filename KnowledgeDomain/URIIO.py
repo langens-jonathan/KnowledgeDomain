@@ -1,4 +1,5 @@
 __author__ = 'Jonathan Langens'
+from KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -27,7 +28,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
              the most general type (URIIO) is at position 0. A list of properties of type URIProperty
              and a list of predicates of type URIPredicate
 """
-
 class URIIO:
 
     """
@@ -60,10 +60,10 @@ class URIIO:
     @param value the value of the property(i.e. for a red color we would use "red" for the value)
     @post the property is initialized as a URIProperty with name and value
     """
-    def addProperty(self, name, value):
+    def addProperty(self, name, value, type = KnowledgeDomainDefinitions.TEXT):
         prop = self.getProperty(name)
         if prop == None:
-            self.properties.append(URIProperty(name, value))
+            self.properties.append(URIProperty(name, value, type))
         else:
             prop.value = value
 
@@ -88,14 +88,8 @@ class URIIO:
             self.properties.remove(prop)
 
     """
-    @param predicate a URIIO that describes this predicate
-    @param object a URIIO that describes the object
-    @post this method is always called on the URIIO that is supposed to be the subject of the predicate. This method the
-    n adds a predicate of this form to the object
+    @result the entire URIIO as an XML Object
     """
-    def addPredicate(self, predicate, object):
-        self.predicates.append(URIPredicate(predicate, object))
-
     def asXML(self):
         toreturn = "<URIIO>"
         toreturn += "<URI>" + u.URI + "</URI>"
@@ -108,13 +102,6 @@ class URIIO:
             toreturn += "<property><name>" + p.name + "</name>"
             toreturn += "<value>" + p.value + "</value></property>"
         toreturn += "</properties>"
-        """
-        toreturn += "<predicates>"
-        for p in self.predicates:
-            toreturn += "<predicate><name>" + p.name + "</name>"
-            toreturn += "<object>" + p.object + "</object></predicate>"
-        toreturn += "</predicates>"
-        """
         toreturn += "</URIIO>"
         return toreturn
 
@@ -127,6 +114,7 @@ class URIIO:
 @description a small helper class that defines a property as 2 strings
 """
 class URIProperty:
-    def __init__(self, name, value):
+    def __init__(self, name, value, type = KnowledgeDomainDefinitions.TEXT):
         self.name = name
         self.value = value
+        self.type = type

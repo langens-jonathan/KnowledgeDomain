@@ -1,4 +1,4 @@
-__author__ = 'jeuna'
+__author__ = 'Jonathan Langens'
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -16,22 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-class URIIOPredicate:
-    def __init__(self, subjet, predicate, object):
-        self.subject = subjet
-        self.object = object
-        self.predicate = predicate
-
-    def getObjects(self):
-        objects = []
-        objects.append(self.object)
-        if self.predicate.reflective:
-            objects.append(self.subject)
-        return objects
-
-    def getSubjects(self):
-        subjects = []
-        subjects.append(self.subject)
-        if self.predicate.reflective:
-            subjects.append(self.object)
-        return subjects
+"""
+@author Jonathan Langens
+@description this class presents all constants the knowledge domain uses
+"""
+class KnowledgeDomainDefinitions:
+    # types
+    TEXT = "text" # all textual data, also serves as the 'base' type
+    NUMERIC = "numeric" # all numbers etc
+    TIME = "time" # a time is a point in time, this is the 'default' time related type
+    DATE = "date" # a date
+    LOCATION = "location" # a location in the world

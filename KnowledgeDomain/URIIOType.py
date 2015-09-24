@@ -1,4 +1,5 @@
 __author__ = 'Jonathan Langens'
+from KnowledgeDomain.KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -46,8 +47,7 @@ class URIIOType:
         if parent is not None:
             self.parent.children.append(self)
         self.type = type
-        self.typeProperties = []# these are other types which are properties of this type
-        self.atomicProperties = []# these are just strings
+        self.properties = []# these are just the properties
         self.locked = False# human users can set a type to locked if they are sure that it is definite
         self.systemDefined = False#A system defined type cannot be altered
 
@@ -63,23 +63,13 @@ class URIIOType:
         return list
 
     """
-    @description returns a list that represents all types that are a part of this type
-    """
-    def asTypePropertyList(self):
-        list = []
-        if self.parent != None:
-            list.extend(self.parent.asTypePropertyList())
-        list.extend(self.typeProperties)
-        return list
-
-    """
     @description returns all properties this type has and all properties of all of its parent
     """
     def asAtomicPropertyList(self):
         list = []
         if self.parent != None:
             list.extend(self.parent.asAtomicPropertyList())
-        list.extend(self.atomicProperties)
+        list.extend(self.properties)
         return list
 
     """
@@ -97,20 +87,30 @@ class URIIOType:
     @param atomicProperty the name of the property we want to check this type has
     @return True
     """
-    def hasAtomicProperty(self, atomicProperty):
-        if self.atomicProperties.count(atomicProperty) > 0:
-            return True
+    def hasProperty(self, propertyname):
+        for p in self.properties:
+            if p.name == propertyname:
+                return True
         if self.parent is not None:
-            return self.parent.hasAtomicProperty(atomicProperty)
+            return self.parent.hasAtomicProperty(propertyname)
         return False
 
-    def hasTypeProperty(self, typeProperty):
-        if self.typeProperties.count(typeProperty) > 0:
-            return True
-        if self.parent is not None:
-            return self.parent.hasTypeProperty(typeProperty)
-        return False
+    """
+    @param propertyname the name of the property that should be remove
+    @post there is no more property in this types property list with the given name
+    """
+    def removeProperty(self, propertyname):
+        props2remove = []
+        for p in self.properties:
+            if p.name == propertyname:
+                props2remove.append(p)
 
+        for p in props2remove:
+            self.properties.remove(p)
+
+    """
+    @return all the other children of this URIIO's parent
+    """
     def getSiblings(self):
         siblings = self.parent.children.copy
         siblings.remove(self)
@@ -122,7 +122,6 @@ class URIIOType:
     def condense(self):
         supertypes = self.asTypeList()
         supertypes.remove(self.type)
-        typelist = self.asTypePropertyList()
         atomlist = self.asAtomicPropertyList()
         condesed = URIIOCondensedType(self.type, supertypes, typelist, atomlist)
         return condesed
@@ -132,10 +131,8 @@ class URIIOType:
         if len(self.children) > 0:
             parent = self
         evolution = URIIOType(parent, self.type + "x")
-        for tp in self.typeProperties:
-            evolution.typeProperties.append(tp)
-        for ap in self.atomicProperties:
-            evolution.atomicProperties.append(ap)
+        for ap in self.properties:
+            evolution.properties.append(URIIOTypeProperty(ap.name, ap.type))
         return evolution
 
     def purge(self):
@@ -147,23 +144,16 @@ class URIIOType:
 
         # first remove all properties that already appear in parents
         for child in self.children:
-            tprops = []
-            for typeprop in child.typeProperties:
-                if self.hasTypeProperty(typeprop):
-                    tprops.append(typeprop)
-
-            for typeprop in tprops:
-                child.typeProperties.remove(typeprop)
-
             aprops = []
-            for atomprop in child.atomicProperties:
-                if self.hasAtomicProperty(atomprop):
+            for atomprop in child.properties:
+                if self.hasProperty(atomprop.name):
                     aprops.append(atomprop)
 
             for atomprop in aprops:
-                child.atomicProperties.remove(atomprop)
+                child.properties.remove(atomprop)
 
         for child in self.children:
+            """
             for typeprop in child.typeProperties:
                 occuranceList = []
                 for child in self.children:
@@ -175,14 +165,15 @@ class URIIOType:
                     if len(occuranceList) > 2 and len(occuranceList) > len(self.children) * 0.75:
                         self.__createSubtypeForProperty(occuranceList)
                 occuranceList.clear()
+                """
 
-            for atomprop in child.atomicProperties:
+            for atomprop in child.properties:
                 occuranceList2 = []
                 for child in self.children:
-                    if child.atomicProperties.count(atomprop):
+                    if child.hasProperty(atomprop.name):
                         occuranceList2.append(child)
-                if len(occuranceList2) ==  len(self.children) and len(self.children) > 1:
-                    self.__extractFromChildren(None, atomprop)
+                if len(occuranceList2) == len(self.children) and len(self.children) > 1:
+                    self.__extractFromChildren(atomprop)
                 else:
                     if len(occuranceList2) > 2 and len(occuranceList2) > len(self.children) * 0.75:
                         self.__createSubtypeForProperty(occuranceList2)
@@ -192,16 +183,11 @@ class URIIOType:
             child.purge()
 
     # helper function that extracts a property from all children of a type and injects it into the supertype
-    def __extractFromChildren(self, typeProperty, atomicProperty):
-        if typeProperty is not None:
-            self.typeProperties.append(typeProperty)
+    def __extractFromChildren(self,  property):
+        if property is not None:
+            self.properties.append(property)
             for child in self.children:
-                child.typeProperties.remove(typeProperty)
-
-        if atomicProperty is not None:
-            self.atomicProperties.append(atomicProperty)
-            for child in self.children:
-                child.atomicProperties.remove(atomicProperty)
+                child.removeProperty(property.name)
 
     # helper function that defines that a subgroup of children from a type will fall under a new subclass of that type
     def __createSubtypeForProperty(self, listOfChildren):
@@ -257,3 +243,11 @@ class URIIOCondensedType:
             print("| * " + ap)
         for tp in self.typeProperties:
             print("| @ " + tp.type)
+
+"""
+a URIIOType Property consists of a property name and a property type.
+"""
+class URIIOTypeProperty:
+    def __init__(self, name, type = KnowledgeDomainDefinitions.TEXT):
+        self.name = name
+        self.type = KnowledgeDomainDefinitions.TEXT

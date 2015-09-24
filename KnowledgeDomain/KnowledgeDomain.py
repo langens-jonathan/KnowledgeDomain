@@ -29,8 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
              (4) predicate definitions
              (5) predicates
              (6) rules
-             (7) built-in time support
-             (8) built-in geography support
+             (7) built-in time and geography support, this is done through typing
              Together they make up a knowledge system from different sources.
 @version 0.01
 """

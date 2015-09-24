@@ -348,9 +348,9 @@ def processURIIOTypeQuery(root):
                     if ch.text == "yes":
                         criteria.exactType = True
 
-        if child.tag == "atomicProperties":
+        if child.tag == "properties":
             for aptag in child:
-                if aptag.tag == "atomicProperty":
+                if aptag.tag == "property":
                     criteria.atomicProperties.append(aptag.text)
 
     criteria.resolve()
@@ -382,10 +382,10 @@ def processURIIOCondensedTypeQuery(root):
     for st in cType.supertypes:
         xmlStr += "<superType>" + st + "</superType>"
     xmlStr += "</superTypes>"
-    xmlStr += "<atomicProperties>"
+    xmlStr += "<properties>"
     for ap in cType.atomicProperties:
-        xmlStr += "<atomicProperty>" + ap + "</atomicProperty>"
-    xmlStr += "</atomicProperties>"
+        xmlStr += "<property>" + ap + "</property>"
+    xmlStr += "</properties>"
     xmlStr += "</condensedType>"
 
     return xmlStr
@@ -440,12 +440,8 @@ def processURIIOTypeSave(root):
             for ch in child:
                 if ch.tag == "name":
                     nType.type = ch.text
-                elif ch.tag == "typeProperty":
-                    tp = kd.typeManager.getType(ch.text)
-                    if tp is not None:
-                        nType.typeProperties.append(tp)
-                elif ch.tag == "atomicProperty":
-                    nType.atomicProperties.append(ch.text)
+                elif ch.tag == "property":
+                    nType.properties.append(ch.text)
                 elif ch.tag == "parent":
                     p = kd.typeManager.getType(ch.text)
                     if p is not None:
