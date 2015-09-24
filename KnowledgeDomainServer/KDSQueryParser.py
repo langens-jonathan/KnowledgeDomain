@@ -384,8 +384,8 @@ def processURIIOCondensedTypeQuery(root):
         xmlStr += "<superType>" + st + "</superType>"
     xmlStr += "</superTypes>"
     xmlStr += "<properties>"
-    for ap in cType.atomicProperties:
-        xmlStr += "<property>" + ap + "</property>"
+    for ap in cType.properties:
+        xmlStr += "<property>" + ap.name + "<type>" + ap.type + "</type></property>"
     xmlStr += "</properties>"
     xmlStr += "</condensedType>"
 

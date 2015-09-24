@@ -68,7 +68,7 @@ class URIIOType:
     def asPropertyList(self):
         list = []
         if self.parent != None:
-            list.extend(self.parent.asAtomicPropertyList())
+            list.extend(self.parent.asPropertyList())
         list.extend(self.properties)
         return list
 
@@ -263,4 +263,4 @@ a URIIOType Property consists of a property name and a property type.
 class URIIOTypeProperty:
     def __init__(self, name, type = KnowledgeDomainDefinitions.TEXT):
         self.name = name
-        self.type = KnowledgeDomainDefinitions.TEXT
+        self.type = type

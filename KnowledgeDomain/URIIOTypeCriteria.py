@@ -1,5 +1,6 @@
 __author__ = 'Jonathan Langens'
-from URIIOType import  URIIOType
+from URIIOType import URIIOType
+from URIIOType import URIIOTypeProperty
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -25,17 +26,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 @description a URIIOTypeCriteria object helps to query the types of a URIIOTypeManager. It allows to set conditions and
 returns all types that conform to those condiditons. Programs that use URIIOTypeCriteria can use the following parameters
 . self.type = the name the wanted type is to have
-. self.atomicProperties = all properties that should be shared by the types, types for which the supertypes have all ato
-mic properties will also be accepted
-. self.typeProperties = all type properties that should be shared by the types, types for which the supertypes have all
- type properties will also be accepted
+. self.properties = all properties that should be shared by the types, types for which the supertypes have all properties will also be accepted
+. self.propertyTypes = all URIIOTypes that have at least one property of those types are added
 """
 class URIIOTypeCriteria:
     def __init__(self, typeList):
         self.typeList = typeList
         self.type = None
-        self.atomicProperties = []
-        self.typeProperties = []
+        self.properties = []
+        self.propertyTypes = []
         self.exactType = False
 
     def __clearBasedOnType__(self):
@@ -50,29 +49,34 @@ class URIIOTypeCriteria:
         for tp in list:
             self.typeList.remove(tp)
 
-    def __clearBasedOnAtomicProperties__(self):
+    def __clearBasedOnProperties__(self):
         list = []
         for tp in self.typeList:
-            for ap in self.atomicProperties:
+            for ap in self.properties:
                 if not tp.hasAtomicProperty(ap):
                     list.append(tp)
         for tp in list:
             self.typeList.remove(tp)
 
-    def __clearBasedOnTypeProperty__(self):
+    def __clearBasedOnPropertyTypes__(self):
         list = []
-        for tp in self.typeList:
-            for ap in self.typeProperties:
-                if not tp.hasTypeProperty(ap):
-                    list.append(tp)
+        for ut in self.typeList:
+            utsbr = False
+            for tp in self.propertyTypes:
+                for p in ut.properties:
+                    if not p.type == tp:
+                        utsbr = True
+            if utsbr:
+                list.append(ut)
+
         for tp in list:
             self.typeList.remove(tp)
 
     def resolve(self):
         if self.type is not None:
             self.__clearBasedOnType__()
-        self.__clearBasedOnAtomicProperties__()
-        self.__clearBasedOnTypeProperty__()
+        self.__clearBasedOnProperties__()
+        self.__clearBasedOnPropertyTypes__()
 
     def asXML(self):
         xmlString = "<types>"
@@ -83,10 +87,10 @@ class URIIOTypeCriteria:
             if tp.parent is not None:
                 parentName = tp.parent.type
             xmlString += "<parent>" + parentName + "</parent>"
-            xmlString += "<atomicProperties>"
-            for ap in tp.atomicProperties:
-                xmlString += "<atomicProperty>" + ap + "</atomicProperty>"
-            xmlString += "</atomicProperties>"
+            xmlString += "<properties>"
+            for ap in tp.properties:
+                xmlString += "<property>" + ap.name + "<type>" + ap.type + "</type></property>"
+            xmlString += "</properties>"
             lockedString = "0"
             if tp.locked:
                 lockedString = "1"

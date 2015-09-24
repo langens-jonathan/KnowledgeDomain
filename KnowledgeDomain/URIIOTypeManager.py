@@ -109,14 +109,10 @@ class URIIOTypeManager:
         if type.type in self.typeDictionary:
             # the type already exists so we retrieve it
             inDictType = self.getType(type.type)
-            # then we reset its type properties and fill them again from the to save type
-            inDictType.typeProperties = []
-            for tp in type.typeProperties:
-                inDictType.typeProperties.append(tp)
-            # next reset the atomic properties
-            inDictType.atomicProperties = []
-            for ap in type.atomicProperties:
-                inDictType.atomicProperties.append(ap)
+            # next reset the properties
+            inDictType.properties = []
+            for ap in type.properties:
+                inDictType.addProperty(ap.name, ap.type)
             # then we set the locked flag
             inDictType.locked = type.locked
             # lastly we switch the parent
@@ -128,10 +124,8 @@ class URIIOTypeManager:
             return "<failed>The entered type description did not provide an acceptable parent type.</failed>"
         else:
             nType = self.getNewURIIOType(type.parent, type.type)
-            for tp in type.typeProperties:
-                nType.typeProperties.append(tp)
-            for ap in type.atomicProperties:
-                nType.atomicProperties.append(ap)
+            for ap in type.properties:
+                nType.addProperty(ap.name, ap.type)
             nType.locked = type.locked
 
             return nType
