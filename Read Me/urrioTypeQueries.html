@@ -34,15 +34,15 @@ The condensed type definition of malamute however is:(has the following properti
 <div id="content-block-b">
 <h2>Type Query</h2>
 <p>The type query will return a list of types that adhere to certain specifications. For instance you can require the type to have some properties (ie having the property paws would return dog and malamute). You can also specify a type name as one of the specifications. Then the returned list will contain <b>all</b> types that are this type or a subtype of this type. If the exactType is required then the returned list will contain at most 1 type which is then this exact type</p>
-<p>The outer tags for this query should be &ltURIIOTypeQuery&gt tags. There are 2 subtages allowed: &ltname&gt and &ltatomicProperties&gt.</p>
+<p>The outer tags for this query should be &ltURIIOTypeQuery&gt tags. There are 2 subtages allowed: &ltname&gt and &ltproperties&gt.</p>
 <p>Inside the name tags you should just put the name of the type you want the returned list to be restricted to. If you want only this <b>exact</b> type, you should insert a &ltexactType&gt tag with the text "yes" in.</p>
-<p>Between the atomicProperties tag all desired properties should be described between &ltatomicProperty&gt tags.</p>
+<p>Between the properties tag all desired properties should be described between &ltproperty&gt tags.</p>
 examples:
 <p>&ltURIIOTypeQuery&gt </br>
 &nbsp &ltname&gt </br> &nbsp &nbsp object </br> &nbsp &ltname&gt </br> &lt/URIIOTypeQuery&gt</p>
 <p>&ltURIIOTypeQuery&gt </br> &nbsp  &ltname&gt </br>  &nbsp  &nbsp dog </br> &nbsp  &nbsp  &ltexactType&gt </br> &nbsp  &nbsp  &nbsp  yes </br> &nbsp  &nbsp  &lt/exactType&gt </br> &nbsp  &ltname&gt </br> &lt/URIIOTypeQuery&gt</p>
-<p>&ltURIIOTypeQuery&gt </br>  &nbsp &ltname&gt </br> &nbsp  &nbsp  dog </br> &nbsp  &ltname&gt </br> &nbsp  &ltatomicProperties&gt </br> &nbsp  &nbsp &ltatomicProperty&gt </br> &nbsp  &nbsp &nbsp   double undercoat </br>  &nbsp  &nbsp &lt/atomicProperty&gt </br>  &nbsp &lt/atomicProperties&gt </br> &lt/URIIOTypeQuery&gt</p>
-<p>&ltURIIOTypeQuery&gt </br>  &nbsp &ltatomicProperties&gt </br>  &nbsp   &nbsp &ltatomicProperty&gt </br>  &nbsp   &nbsp   &nbsp paws </br>  &nbsp   &nbsp &lt/atomicProperty&gt </br>  &nbsp &lt/atomicProperties&gt </br>&lt/URIIOTypeQuery&gt</p>
+<p>&ltURIIOTypeQuery&gt </br>  &nbsp &ltname&gt </br> &nbsp  &nbsp  dog </br> &nbsp  &ltname&gt </br> &nbsp  &ltproperties&gt </br> &nbsp  &nbsp &ltproperty&gt </br> &nbsp  &nbsp &nbsp   double undercoat </br>  &nbsp  &nbsp &lt/property&gt </br>  &nbsp &lt/properties&gt </br> &lt/URIIOTypeQuery&gt</p>
+<p>&ltURIIOTypeQuery&gt </br>  &nbsp &ltproperties&gt </br>  &nbsp   &nbsp &ltproperty&gt </br>  &nbsp   &nbsp   &nbsp paws </br>  &nbsp   &nbsp &lt/property&gt </br>  &nbsp &lt/properties&gt </br>&lt/URIIOTypeQuery&gt</p>
 </div>
 
 <div id="content-block-a">
@@ -51,6 +51,10 @@ examples:
 </div>
 <div id="footer">
 </div>
+
+
+<p>&ltactionURIIOTypeSave&gt </br>  &nbsp &ltname&gt </br> &nbsp  &nbsp  dog </br> &nbsp  &ltname&gt </br> &nbsp  &ltproperties&gt </br> &nbsp  &nbsp &ltproperty&gt </br> &nbsp  &nbsp &nbsp   double undercoat </br> &nbsp &nbsp &nbsp &lttype&gt </br> &nbsp &nbsp &nbsp &nbsp text </br> &nbsp &nbsp &nbsp &lt/type&gt </br>  &nbsp  &nbsp &lt/property&gt </br>  &nbsp &lt/properties&gt </br> &lt/ltactionURIIOTypeSave&gt</p>
+<p>&ltactionURIIOTypeSave&gt </br>  &nbsp &ltproperties&gt </br>  &nbsp   &nbsp &ltproperty&gt </br>  &nbsp   &nbsp   &nbsp paws </br>  &nbsp   &nbsp &lt/property&gt </br>  &nbsp &lt/properties&gt </br>&lt/actionURIIOTypeSave&gt</p>
 
 </div>
 
