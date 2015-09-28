@@ -2,6 +2,7 @@ __author__ = 'jeuna'
 from Template import Template
 class TemplateXLSX(Template):
     def __init__(self):
+        self.objectTemplates = []
         return
 
     def getHashCode(self):

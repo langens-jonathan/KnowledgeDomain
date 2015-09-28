@@ -1,7 +1,7 @@
 __author__ = 'jeuna'
 from KnowledgeInstance import KnowledgeInstance
-from KnowledgeDomain.URIIOManager import URIIOManager
-from KnowledgeDomain.URIIOPredicateManager import URIIOPredicateManager
+from URIIOManager import URIIOManager
+from URIIOPredicateManager import URIIOPredicateManager
 
 class DataSourceManager:
     def __init__(self):

@@ -3,6 +3,9 @@ from URIIOManager import URIIOManager
 from URIIOTypeManager import URIIOTypeManager
 from URIIOPredicateDefinitionManager import URIIOPredicateDefinitionManager
 from URIIOPredicateManager import URIIOPredicateManager
+from TemplateManager import TemplateManager
+from DataSourceManager import DataSourceManager
+
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -46,6 +49,8 @@ class KnowledgeDomain:
         self.typeManager = URIIOTypeManager()
         self.predicateDefinitionManager = URIIOPredicateDefinitionManager(self.typeManager)
         self.predicateManager = URIIOPredicateManager()
+        self.templateManager = TemplateManager()
+        self.dataSourceManager = DataSourceManager()
 
     """
     @description simple helper function that allows the domain to be easily printed to the terminal

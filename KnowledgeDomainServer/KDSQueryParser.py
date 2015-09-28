@@ -4,6 +4,12 @@ import xml.etree.cElementTree as ET
 from KnowledgeDomain.KnowledgeDomainManager import KnowledgeDomainManager
 from KnowledgeDomain.URIIOType import URIIOType
 from KnowledgeDomain.URIIOType import URIIOTypeProperty
+from KnowledgeDomain.TemplateXLSX import TemplateXLSX
+from KnowledgeDomain.TemplateXLSX import XLSXObjectPropertyTemplate
+from KnowledgeDomain.TemplateXLSX import XLSXObjectTemplate
+from KnowledgeDomain.TemplateXLSX import XLSXObjectConnectorTemplate
+from KnowledgeDomain.DataSourceXLSX import DataSourceXLSX
+
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -104,6 +110,18 @@ def ParseQuery(query):
         return processAddPredicate(root)
     elif root.tag == "actionRemovePredicate":
         return processRemovePredicate(root)
+
+    #
+    # Template Related Stuff
+    elif root.tag == "actionTemplateSave":
+        return processSaveTemplate(root)
+
+
+    #
+    # DataSource Related Stuff
+    #
+    elif root.tag == "actionDataSourceSave":
+        return processSaveDataSource(root)
 
 
     return "unable to process query of type: " + root.tag + "\nFor more info on queries consult the documentation."
@@ -556,3 +574,69 @@ def processRemovePredicate(root):
     kd.predicateManager.removePredicate(sub, pred, obj)
 
     return "<success></success>"
+
+#
+# Template Related Stuff
+#
+
+def processSaveTemplate(root):
+    for ttype in root:
+        if ttype.tag == "XLSXTemplate":
+            t = TemplateXLSX()
+            for objtempl in ttype:
+                odef = XLSXObjectTemplate()
+                for obchild in objtempl:
+                    if obchild.tag == "type":
+                       odef.type = obchild.text
+                    elif obchild.tag == "property":
+                        prop = XLSXObjectPropertyTemplate()
+                        for p in obchild:
+                            if p.tag == "x":
+                                prop.x = int(p.text)
+                            elif p.tag == "y":
+                                prop.y = int(p.text)
+                            elif p.tag == "namex":
+                                prop.namex = int(p.text)
+                            elif p.tag == "namey":
+                                prop.namey = int(p.text)
+                        odef.properties.append(prop)
+                    elif obchild.tag == "connector":
+                        conn = XLSXObjectConnectorTemplate()
+                        for c in obchild:
+                            if c.tag == "x":
+                                conn.x = int(c.text)
+                            elif c.tag == "y":
+                                conn.y = int(c.text)
+                            elif c.tag == "type":
+                                conn.type = c.text
+                            elif c.tag == "property":
+                                conn.property = c.text
+                            elif c.tag == "predicate":
+                                conn.predicate = c.text
+                            elif c.tag == "subject":
+                                sub = True
+                                if c.text == "no":
+                                    sub = False
+                                conn.subject = sub
+                        odef.connectors.append(conn)
+                t.objectTemplates.append(odef)
+
+    return "<success></success>"
+
+#
+# DataSource Related Stuff
+#
+
+def processSaveDataSource(root):
+    for dstype in root:
+        if dstype.tag == "XLSXSource":
+            src = DataSourceXLSX()
+            for ch in dstype:
+                if ch.tag == "file":
+                    src.sourceFile = ch.text
+                elif ch.tag == "template":
+                    kdmanager = KnowledgeDomainManager()
+                    kd = kdmanager.getDomain()
+                    tpt = kd.templateManager.getTemplate(ch.text)
+                    if tpt is not None:
+                        src.template = tpt
