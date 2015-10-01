@@ -8,6 +8,17 @@ class TemplateXLSX(Template):
     def getHashCode(self):
         return "XLSXHash"
 
+    def getObjectTemplatesForCriteria(self, uriioCriteria, predicateCriteria, domain):
+
+        toreturn = []
+
+        for ot in self.objectTemplates:
+            # here we should do the checking
+            toreturn.append(ot)
+
+        return toreturn
+
+
 
 """
 @description an XLSXObjectTemplate describes 1 URIIO somewhere in an XLSX file. It will be used to construct a URIIO

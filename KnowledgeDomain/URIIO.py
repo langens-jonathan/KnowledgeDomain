@@ -92,7 +92,7 @@ class URIIO:
     """
     def asXML(self):
         toreturn = "<URIIO>"
-        toreturn += "<URI>" + u.URI + "</URI>"
+        toreturn += "<URI>" + self.URI + "</URI>"
         toreturn += "<types>"
         for t in self.type:
             toreturn += "<type>" + t.type + "</type>"
@@ -100,7 +100,7 @@ class URIIO:
         toreturn += "<properties>"
         for p in self.properties:
             toreturn += "<property><name>" + p.name + "</name>"
-            toreturn += "<value>" + p.value + "</value></property>"
+            toreturn += "<value>" + str(p.value) + "</value></property>"
         toreturn += "</properties>"
         toreturn += "</URIIO>"
         return toreturn

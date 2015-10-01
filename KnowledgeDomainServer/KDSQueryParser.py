@@ -9,6 +9,7 @@ from KnowledgeDomain.TemplateXLSX import XLSXObjectPropertyTemplate
 from KnowledgeDomain.TemplateXLSX import XLSXObjectTemplate
 from KnowledgeDomain.TemplateXLSX import XLSXObjectConnectorTemplate
 from KnowledgeDomain.DataSourceXLSX import DataSourceXLSX
+from KnowledgeDomain.URIIOCriteria import URIIOCriteria
 
 """
 Copyright (C) 2015  Langens Jonathan
@@ -130,6 +131,7 @@ def ParseQuery(query):
 # URIIO Related stuff
 #
 
+"""
 def processURIIOQuery(root):
     kdmanager = KnowledgeDomainManager()
     kd = kdmanager.getDomain()
@@ -161,6 +163,40 @@ def processURIIOQuery(root):
 
     criteria.resolve()
 
+    return criteria.asXML()
+"""
+def processURIIOQuery(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
+
+    criteria = URIIOCriteria([])
+
+    for child in root:
+        if child.tag == "type":
+            criteria.TypeRestrictions.append(child.text)
+        elif child.tag == "property":
+            name = ""
+            value = ""
+            for propdef in child:
+                if propdef.tag == "name":
+                    name = propdef.text
+                elif propdef.tag == "value":
+                    value = propdef.text
+            criteria.addPropertyRestriction(name, value)
+        elif child.tag == "predicate":
+            pred = ""
+            obj = ""
+            for preddef in child:
+                if preddef.tag == "name":
+                    pred = preddef.text
+                elif preddef.tag == "object":
+                    obj = preddef.text
+            criteria.addPredicateRestrition(pred, obj)
+        elif child.tag == "uriio":
+            criteria.addURIRestriction(child.text)
+
+    instance = kd.dataSourceManager.getKnowledgeInstance(criteria, None, kd)
+    criteria.URIIOList = instance.uriioManager.URIIOs
     return criteria.asXML()
 
 
@@ -580,16 +616,18 @@ def processRemovePredicate(root):
 #
 
 def processSaveTemplate(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
     for ttype in root:
         if ttype.tag == "XLSXTemplate":
             t = TemplateXLSX()
             for objtempl in ttype:
-                odef = XLSXObjectTemplate()
+                odef = XLSXObjectTemplate("type")
                 for obchild in objtempl:
                     if obchild.tag == "type":
                        odef.type = obchild.text
                     elif obchild.tag == "property":
-                        prop = XLSXObjectPropertyTemplate()
+                        prop = XLSXObjectPropertyTemplate(0,0,0,0)
                         for p in obchild:
                             if p.tag == "x":
                                 prop.x = int(p.text)
@@ -599,9 +637,11 @@ def processSaveTemplate(root):
                                 prop.namex = int(p.text)
                             elif p.tag == "namey":
                                 prop.namey = int(p.text)
+                            elif p.tag == "name":
+                                prop.name = p.text
                         odef.properties.append(prop)
                     elif obchild.tag == "connector":
-                        conn = XLSXObjectConnectorTemplate()
+                        conn = XLSXObjectConnectorTemplate(0,0,"type", "", "has relation to", False)
                         for c in obchild:
                             if c.tag == "x":
                                 conn.x = int(c.text)
@@ -620,6 +660,7 @@ def processSaveTemplate(root):
                                 conn.subject = sub
                         odef.connectors.append(conn)
                 t.objectTemplates.append(odef)
+            kd.templateManager.setTemplate(t)
 
     return "<success></success>"
 
@@ -628,9 +669,11 @@ def processSaveTemplate(root):
 #
 
 def processSaveDataSource(root):
+    kdmanager = KnowledgeDomainManager()
+    kd = kdmanager.getDomain()
     for dstype in root:
         if dstype.tag == "XLSXSource":
-            src = DataSourceXLSX()
+            src = DataSourceXLSX("")
             for ch in dstype:
                 if ch.tag == "file":
                     src.sourceFile = ch.text
@@ -640,3 +683,6 @@ def processSaveDataSource(root):
                     tpt = kd.templateManager.getTemplate(ch.text)
                     if tpt is not None:
                         src.template = tpt
+            kd.dataSourceManager.addDataSource(src)
+
+    return "<success></success>"

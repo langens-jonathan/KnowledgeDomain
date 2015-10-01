@@ -161,6 +161,9 @@ class URIIOTypeManager:
         idea.systemDefined = True
         dic["idea"] = idea
 
+        workday = URIIOType(idea, "workday")
+        dic["workday"] = workday
+
         obj = URIIOType(type, "object")
         obj.locked = True
         obj.systemDefined = True
