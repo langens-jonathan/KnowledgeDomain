@@ -9,13 +9,13 @@ class DataSourceXLSX(DataSource):
         self.template = TemplateXLSX()
         self.sourceFile = "/home/jeuna/Downloads/datasources/wb.xlsx"
 
-    def extendKnowledgeInstance(self, instance, URIIOCriteria, URIIOPredicateCriteria, domain):
+    def addURIIOS(self, instance, URIIOCriteria, domain):
         # read in the source file
         wb = load_workbook(self.sourceFile)
         ws = wb.get_active_sheet()
 
         # we iterate over all templates and try to read the data that they contain
-        eligilbeObjectTemplates = self.template.getObjectTemplatesForCriteria(URIIOCriteria, URIIOPredicateCriteria, domain)
+        eligilbeObjectTemplates = self.template.getObjectTemplatesForCriteria(URIIOCriteria, domain)
 
         for ot in eligilbeObjectTemplates:
             uriio = instance.uriioManager.newURIIO()
@@ -33,6 +33,35 @@ class DataSourceXLSX(DataSource):
                 uriio.addProperty(pname, pvalue, ptype)
 
         return True
+
+    def addPredicates(self, instance, predicateCriteria, domain):
+        # read in the source file
+        wb = load_workbook(self.sourceFile)
+        ws = wb.get_active_sheet()
+
+        # we iterate over all templates and try to read the data that they contain
+        eligilbeObjectTemplates = self.template.getObjectTemplatesForCriteria(predicateCriteria, domain)
+
+        for ot in eligilbeObjectTemplates:
+            for conn in ot.connectors:
+                uc = instance.uriioManager.getCriteria()
+                for p in ot.properties:
+                    pname = p.name
+                    if pname == "" or pname is None:
+                        pname = str(self.getDataForPosition(ws, p.namex, p.namey))
+                    pvalue = self.getDataForPosition(ws, p.x, p.y)
+                    uc.addPropertyRestriction(pname, pvalue)
+                urilist = uc.getURIIOS()
+                if len(urilist) > 0:
+                    otURI = urilist[0].URI
+
+                    connValue = self.getDataForPosition(ws, conn.x, conn.y)
+                    uriioCriteria = instance.uriioManager.getCriteria()
+                    uriioCriteria.TypeRestrictions.append(conn.type)
+                    uriioCriteria.addPropertyRestriction(conn.property, connValue)
+                    uriioCriteria.resolve()
+                    for uriio in uriioCriteria.getURIIOs():
+                        instance.predicateManager.addPredicate(uriio.URI, conn.predicate, otURI)
 
 
     def getTypeForPosition(self, data, rowpos, colpos):

@@ -11,16 +11,14 @@ class DataSourceManager:
         self.sources.append(src)
 
     def getKnowledgeInstance(self, uriioCritera, predicateCriteria, domain):
-        instance = KnowledgeInstance(URIIOManager("/tmp/user/"), URIIOPredicateManager())
+        instance = KnowledgeInstance(URIIOManager("/tmp/user"), URIIOPredicateManager())
 
         changed = False
 
         sources = []
 
-        print("number of data sources = " + str(len(self.sources)))
-
         for src in self.sources:
-            if src.extendKnowledgeInstance(instance, uriioCritera, predicateCriteria, domain):
+            if src.addURIIOS(instance, uriioCritera, domain):
                 changed = True
             else:
                 sources.append(src)
@@ -29,7 +27,7 @@ class DataSourceManager:
         while changed:
             changed = False
             for src in sources:
-                if src.extendKnowledgeInstance(instance, uriioCritera, predicateCriteria, domain):
+                if src.addURIIOS(instance, uriioCritera, domain):
                     changed = True
                     sourcesThatChangedTheKI.append(src)
 
@@ -37,5 +35,8 @@ class DataSourceManager:
                 sources.remove(src)
 
             sourcesThatChangedTheKI = []
+
+        for src in self.sources:
+            src.addPredicates(instance, None, domain)
 
         return instance

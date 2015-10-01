@@ -10,6 +10,10 @@ from KnowledgeDomain.TemplateXLSX import XLSXObjectTemplate
 from KnowledgeDomain.TemplateXLSX import XLSXObjectConnectorTemplate
 from KnowledgeDomain.DataSourceXLSX import DataSourceXLSX
 from KnowledgeDomain.URIIOCriteria import URIIOCriteria
+from KnowledgeDomain.TemplateSQLite import TemplateSQLite
+from KnowledgeDomain.DataSourceSQLite import DataSourceSQLite
+from KnowledgeDomain.TemplateSQLite import SQLTable
+from KnowledgeDomain.TemplateSQLite import SQLColumn
 
 """
 Copyright (C) 2015  Langens Jonathan
@@ -661,6 +665,29 @@ def processSaveTemplate(root):
                         odef.connectors.append(conn)
                 t.objectTemplates.append(odef)
             kd.templateManager.setTemplate(t)
+        elif ttype.tag == "SQLiteTemplate":
+            t = TemplateSQLite()
+            for tables in ttype:
+                if tables.tag == "table":
+                    table = SQLTable("")
+                    for td in tables:
+                        if td.tag == "name":
+                            table.name = td.text
+                        elif td.tag == "type":
+                            table.type = td.text
+                        elif td.tag == "columns":
+                            for cd in td:
+                                if cd.tag == "column":
+                                    column = SQLColumn("", 0)
+                                    for cdd in cd:
+                                        if cdd.tag == "name":
+                                            column.name = cdd.text
+                                        elif cdd.tag == "number":
+                                            column.number = int(cdd.text)
+                                    table.columns.append(column)
+                    t.tables.append(table)
+            kd.templateManager.setTemplate(t)
+
 
     return "<success></success>"
 
@@ -674,6 +701,18 @@ def processSaveDataSource(root):
     for dstype in root:
         if dstype.tag == "XLSXSource":
             src = DataSourceXLSX("")
+            for ch in dstype:
+                if ch.tag == "file":
+                    src.sourceFile = ch.text
+                elif ch.tag == "template":
+                    kdmanager = KnowledgeDomainManager()
+                    kd = kdmanager.getDomain()
+                    tpt = kd.templateManager.getTemplate(ch.text)
+                    if tpt is not None:
+                        src.template = tpt
+            kd.dataSourceManager.addDataSource(src)
+        if dstype.tag == "SQLiteSource":
+            src = DataSourceSQLite("")
             for ch in dstype:
                 if ch.tag == "file":
                     src.sourceFile = ch.text

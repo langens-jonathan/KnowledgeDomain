@@ -6,3 +6,18 @@ class DataSource:
     # datasource extends (or injects) all objects the qualify the criteria and all predicates that do
     def extendKnowledgeInstance(self, instance, URIIOCriteria, URIIOPredicateCriteria, domain):
         return False
+
+    def reset(self):
+        return
+
+    def addURIIOS(self, instance, URIIOCriteria, domain):
+        return False
+
+    def extendURIIOS(self, instance, domain):
+        return False
+
+    def addPredicates(self, instance, PredicateCriteria, domain):
+        return False
+
+    def extendURIIOSBaseOnPredicates(self, instance, domain):
+        return False

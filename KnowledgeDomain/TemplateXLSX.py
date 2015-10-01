@@ -8,7 +8,7 @@ class TemplateXLSX(Template):
     def getHashCode(self):
         return "XLSXHash"
 
-    def getObjectTemplatesForCriteria(self, uriioCriteria, predicateCriteria, domain):
+    def getObjectTemplatesForCriteria(self, uriioCriteria, domain):
 
         toreturn = []
 
