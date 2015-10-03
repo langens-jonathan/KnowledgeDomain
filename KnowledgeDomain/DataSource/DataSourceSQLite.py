@@ -1,8 +1,8 @@
 __author__ = 'jeuna'
-from DataSource import DataSource
-from TemplateSQLite import TemplateSQLite
-from TemplateSQLite import SQLTable
-from TemplateSQLite import SQLColumn
+from KnowledgeDomain.DataSource.DataSource import DataSource
+from KnowledgeDomain.Template.TemplateSQLite import TemplateSQLite
+from KnowledgeDomain.Template.TemplateSQLite import SQLTable
+from KnowledgeDomain.Template.TemplateSQLite import SQLColumn
 
 import sqlite3 as lite
 

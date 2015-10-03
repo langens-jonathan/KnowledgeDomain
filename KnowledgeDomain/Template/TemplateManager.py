@@ -1,5 +1,5 @@
 __author__ = 'jeuna'
-from Template import Template
+from KnowledgeDomain.Template.Template import Template
 class TemplateManager:
     def __init__(self):
         self.templates = dict()

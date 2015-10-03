@@ -1,7 +1,7 @@
 __author__ = 'Jonathan Langens'
 
 from URIIO import URIIO
-from URIIOCriteria import URIIOCriteria
+from Criteria.URIIOCriteria import URIIOCriteria
 """
 Copyright (C) 2015  Langens Jonathan
 

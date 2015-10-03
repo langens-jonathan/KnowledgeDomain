@@ -1,6 +1,6 @@
 __author__ = 'Jonathan Langens'
-from URIIO import URIProperty
-from Criteria import Criteria
+from KnowledgeDomain.URIIO import URIProperty
+from KnowledgeDomain.Criteria.Criteria import Criteria
 """
 Copyright (C) 2015  Langens Jonathan
 

@@ -11,6 +11,8 @@ class UserBox:
         self.maxURIIOs = 500
         self.maxPredicates = 2500
         self.knowledgeInstance = None
+        self.canAddDataSources = False
+        self.canPersistKnowledgeInstances = False
 
     def maxedOutURIIOs(self):
         return len(self.knowledgeInstance.uriioManager.URIIOs) >= self.maxURIIOs

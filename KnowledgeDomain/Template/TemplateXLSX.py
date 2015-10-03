@@ -1,5 +1,6 @@
 __author__ = 'jeuna'
-from Template import Template
+from KnowledgeDomain.Template.Template import Template
+
 class TemplateXLSX(Template):
     def __init__(self):
         self.objectTemplates = []

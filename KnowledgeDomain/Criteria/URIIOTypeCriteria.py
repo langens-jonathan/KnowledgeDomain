@@ -1,6 +1,6 @@
 __author__ = 'Jonathan Langens'
-from URIIOType import URIIOType
-from URIIOType import URIIOTypeProperty
+from KnowledgeDomain.Type.URIIOType import URIIOType
+from KnowledgeDomain.Type.URIIOType import URIIOTypeProperty
 """
 Copyright (C) 2015  Langens Jonathan
 

@@ -2,18 +2,18 @@ __author__ = 'Jonathan Langens'
 import xml.etree.cElementTree as ET
 
 from KnowledgeDomain.KnowledgeDomainManager import KnowledgeDomainManager
-from KnowledgeDomain.URIIOType import URIIOType
-from KnowledgeDomain.URIIOType import URIIOTypeProperty
-from KnowledgeDomain.TemplateXLSX import TemplateXLSX
-from KnowledgeDomain.TemplateXLSX import XLSXObjectPropertyTemplate
-from KnowledgeDomain.TemplateXLSX import XLSXObjectTemplate
-from KnowledgeDomain.TemplateXLSX import XLSXObjectConnectorTemplate
-from KnowledgeDomain.DataSourceXLSX import DataSourceXLSX
-from KnowledgeDomain.URIIOCriteria import URIIOCriteria
-from KnowledgeDomain.TemplateSQLite import TemplateSQLite
-from KnowledgeDomain.DataSourceSQLite import DataSourceSQLite
-from KnowledgeDomain.TemplateSQLite import SQLTable
-from KnowledgeDomain.TemplateSQLite import SQLColumn
+from KnowledgeDomain.Type.URIIOType import URIIOType
+from KnowledgeDomain.Type.URIIOType import URIIOTypeProperty
+from KnowledgeDomain.Template.TemplateXLSX import TemplateXLSX
+from KnowledgeDomain.Template.TemplateXLSX import XLSXObjectPropertyTemplate
+from KnowledgeDomain.Template.TemplateXLSX import XLSXObjectTemplate
+from KnowledgeDomain.Template.TemplateXLSX import XLSXObjectConnectorTemplate
+from KnowledgeDomain.DataSource.DataSourceXLSX import DataSourceXLSX
+from KnowledgeDomain.Criteria.URIIOCriteria import URIIOCriteria
+from KnowledgeDomain.Template.TemplateSQLite import TemplateSQLite
+from KnowledgeDomain.DataSource.DataSourceSQLite import DataSourceSQLite
+from KnowledgeDomain.Template.TemplateSQLite import SQLTable
+from KnowledgeDomain.Template.TemplateSQLite import SQLColumn
 
 """
 Copyright (C) 2015  Langens Jonathan

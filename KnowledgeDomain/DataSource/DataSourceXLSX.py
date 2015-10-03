@@ -1,8 +1,8 @@
 __author__ = 'Jonathan Langens'
 from openpyxl import load_workbook
 from openpyxl.cell import Cell
-from TemplateXLSX import TemplateXLSX
-from DataSource import DataSource
+from KnowledgeDomain.Template.TemplateXLSX import TemplateXLSX
+from KnowledgeDomain.DataSource.DataSource import DataSource
 
 class DataSourceXLSX(DataSource):
     def __init__(self, filename):

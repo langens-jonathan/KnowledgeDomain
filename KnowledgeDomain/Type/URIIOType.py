@@ -1,5 +1,5 @@
 __author__ = 'Jonathan Langens'
-from KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
+from KnowledgeDomain.KnowledgeDomainDefinitions import KnowledgeDomainDefinitions
 """
 Copyright (C) 2015  Langens Jonathan
 

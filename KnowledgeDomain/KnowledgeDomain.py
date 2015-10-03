@@ -1,10 +1,10 @@
 __author__ = 'Jonathan Langens'
 from URIIOManager import URIIOManager
-from URIIOTypeManager import URIIOTypeManager
-from URIIOPredicateDefinitionManager import URIIOPredicateDefinitionManager
+from Type.URIIOTypeManager import URIIOTypeManager
+from PredicateDefinition.URIIOPredicateDefinitionManager import URIIOPredicateDefinitionManager
 from URIIOPredicateManager import URIIOPredicateManager
-from TemplateManager import TemplateManager
-from DataSourceManager import DataSourceManager
+from Template.TemplateManager import TemplateManager
+from DataSource.DataSourceManager import DataSourceManager
 
 """
 Copyright (C) 2015  Langens Jonathan

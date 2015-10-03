@@ -1,4 +1,6 @@
 __author__ = 'jeuna'
+from KnowledgeDomain.User.UserBox import UserBox
+from KnowledgeDomain.Criteria.Criteria import Criteria
 
 class DataSource:
 
@@ -9,10 +11,10 @@ class DataSource:
         return False
 
 
-    def processPreQueries(self):
+    def processPreQueries(self, userBox, criteria):
         return False
 
-    def extractURIIOs(self):
+    def extractURIIOs(self, userBox, criteria):
         return False
 
     def processConnectors(self):

@@ -1,6 +1,6 @@
 __author__ = 'jeuna'
-from Template import Template
-from URIIO import URIIO
+from KnowledgeDomain.Template.Template import Template
+from KnowledgeDomain.URIIO import URIIO
 
 class TemplateSQLite(Template):
 

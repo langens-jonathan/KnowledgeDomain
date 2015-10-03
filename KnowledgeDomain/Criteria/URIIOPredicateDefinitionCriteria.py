@@ -1,6 +1,6 @@
 __author__ = 'Jonathan Langens'
-from URIIOPredicateDefinition import URIIOPredicateDefinition
-from URIIOType import  URIIOType
+from KnowledgeDomain.PredicateDefinition.URIIOPredicateDefinition import URIIOPredicateDefinition
+from KnowledgeDomain.Type.URIIOType import  URIIOType
 """
 Copyright (C) 2015  Langens Jonathan
 
