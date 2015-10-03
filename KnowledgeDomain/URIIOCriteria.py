@@ -1,5 +1,6 @@
 __author__ = 'Jonathan Langens'
 from URIIO import URIProperty
+from Criteria import Criteria
 """
 Copyright (C) 2015  Langens Jonathan
 
@@ -17,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 """
-class URIIOCriteria:
+class URIIOCriteria(Criteria):
 
     def __init__(self, URIIOList):
         self.URIIOList = URIIOList
@@ -25,6 +26,9 @@ class URIIOCriteria:
         self.PropertyRestrictions = []
         self.PredicateRestrictions = []
         self.TypeRestrictions = []
+
+    def getCriteriaType(self):
+        return "uriioCriteria"
 
     def addURIRestriction(self, uri):
         self.URIRestrictions.append(uri)

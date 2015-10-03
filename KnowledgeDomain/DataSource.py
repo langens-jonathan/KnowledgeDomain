@@ -4,20 +4,16 @@ class DataSource:
 
     # all DataSource object must override the following method. When passed an instance and 2 criteria the
     # datasource extends (or injects) all objects the qualify the criteria and all predicates that do
+    # the extend knowledge instance function should be removed as it is partitioned in 4 parts now
     def extendKnowledgeInstance(self, instance, URIIOCriteria, URIIOPredicateCriteria, domain):
         return False
 
-    def reset(self):
-        return
 
-    def addURIIOS(self, instance, URIIOCriteria, domain):
+    def processPreQueries(self):
         return False
 
-    def extendURIIOS(self, instance, domain):
+    def extractURIIOs(self):
         return False
 
-    def addPredicates(self, instance, PredicateCriteria, domain):
-        return False
-
-    def extendURIIOSBaseOnPredicates(self, instance, domain):
+    def processConnectors(self):
         return False
