@@ -11,11 +11,11 @@ class DataSource:
         return False
 
 
-    def processPreQueries(self, userBox, criteria):
+    def processPreQueries(self, userBox, criteria, domain):
         return False
 
-    def extractURIIOs(self, userBox, criteria):
+    def extractURIIOs(self, userBox, criteria, domain):
         return False
 
-    def processConnectors(self):
+    def processConnectors(self, userBox, criteria, domain):
         return False

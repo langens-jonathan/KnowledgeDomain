@@ -29,7 +29,8 @@ class XLSXObjectTemplate:
     def __init__(self, type):
         self.type = type
         self.properties = []
-        self.connectors = []
+        self.predicateConnectors = []
+        self.extenderConnectors = None
 
 
 """
@@ -59,3 +60,10 @@ class XLSXObjectConnectorTemplate:
         self.property = property
         self.predicate = predicate
         self.subject = subject
+
+class XLSXObjectExtenderConnectorTemplate:
+    def __init__(self, x, y, type, property):
+        self.type = type
+        self.property = property
+        self.x = x
+        self.y = y

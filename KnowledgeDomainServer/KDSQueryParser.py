@@ -14,6 +14,7 @@ from KnowledgeDomain.Template.TemplateSQLite import TemplateSQLite
 from KnowledgeDomain.DataSource.DataSourceSQLite import DataSourceSQLite
 from KnowledgeDomain.Template.TemplateSQLite import SQLTable
 from KnowledgeDomain.Template.TemplateSQLite import SQLColumn
+from KnowledgeDomain.User.UserManager import UserManager
 
 """
 Copyright (C) 2015  Langens Jonathan
@@ -129,13 +130,23 @@ def ParseQuery(query):
         return processSaveDataSource(root)
 
 
+    #
+    # User Related Stuff
+    #
+    elif root.tag == "actionUserResetKnowledgeInstance":
+        return resetKnowledgeInstanceForUser(root)
+    elif root.tag == "KnowledgeInstance":
+        return getKnowledgeInstanceForUser(root)
+    elif root.tag == "addDataToKnowledgeInstance":
+        return addDataToKnowledgeInstance(root)
+
+
     return "unable to process query of type: " + root.tag + "\nFor more info on queries consult the documentation."
 
 #
 # URIIO Related stuff
 #
 
-"""
 def processURIIOQuery(root):
     kdmanager = KnowledgeDomainManager()
     kd = kdmanager.getDomain()
@@ -168,6 +179,7 @@ def processURIIOQuery(root):
     criteria.resolve()
 
     return criteria.asXML()
+
 """
 def processURIIOQuery(root):
     kdmanager = KnowledgeDomainManager()
@@ -202,7 +214,7 @@ def processURIIOQuery(root):
     instance = kd.dataSourceManager.getKnowledgeInstance(criteria, None, kd)
     criteria.URIIOList = instance.uriioManager.URIIOs
     return criteria.asXML()
-
+"""
 
 def processURIIONew(root):
     kdmanager = KnowledgeDomainManager()
@@ -644,25 +656,27 @@ def processSaveTemplate(root):
                             elif p.tag == "name":
                                 prop.name = p.text
                         odef.properties.append(prop)
-                    elif obchild.tag == "connector":
-                        conn = XLSXObjectConnectorTemplate(0,0,"type", "", "has relation to", False)
+                    elif obchild.tag == "predicateConnector":
+                        conn = XLSXObjectConnectorTemplate(0,0,"type", "", "has relation to", True)
                         for c in obchild:
-                            if c.tag == "x":
-                                conn.x = int(c.text)
-                            elif c.tag == "y":
-                                conn.y = int(c.text)
-                            elif c.tag == "type":
+                            if c.tag == "connectorField":
+                                for cc in c:
+                                    if cc.tag == "x":
+                                        conn.x = int(cc.text)
+                                    elif cc.tag == "y":
+                                        conn.y = int(cc.text)
+                            elif c.tag == "connectsToType":
                                 conn.type = c.text
-                            elif c.tag == "property":
+                            elif c.tag == "connectsOnProperty":
                                 conn.property = c.text
-                            elif c.tag == "predicate":
+                            elif c.tag == "connectorPredicate":
                                 conn.predicate = c.text
                             elif c.tag == "subject":
                                 sub = True
                                 if c.text == "no":
                                     sub = False
                                 conn.subject = sub
-                        odef.connectors.append(conn)
+                        odef.predicateConnectors.append(conn)
                 t.objectTemplates.append(odef)
             kd.templateManager.setTemplate(t)
         elif ttype.tag == "SQLiteTemplate":
@@ -724,4 +738,29 @@ def processSaveDataSource(root):
                         src.template = tpt
             kd.dataSourceManager.addDataSource(src)
 
+    return "<success></success>"
+
+
+#
+# User Related Stuff
+#
+def resetKnowledgeInstanceForUser(root):
+    usrmanager = UserManager()
+    userBox = usrmanager.getUserBoxForUser("jonathan")
+    userBox.resetKnowledgeInstance()
+
+    return "<success></success>"
+
+def getKnowledgeInstanceForUser(root):
+    usrmanager = UserManager()
+    userBox = usrmanager.getUserBoxForUser("jonathan")
+    return userBox.knowledgeInstance.asXML()
+
+def addDataToKnowledgeInstance(root):
+    kdmanager = KnowledgeDomainManager()
+    domain = kdmanager.getDomain()
+    usrmanager = UserManager()
+    userBox = usrmanager.getUserBoxForUser("jonathan")
+
+    domain.dataSourceManager.addToKnowledgeInstance(userBox, None, domain)
     return "<success></success>"

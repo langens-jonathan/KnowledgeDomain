@@ -38,7 +38,20 @@ class URIIOCriteria(Criteria):
 
     def addPredicateRestriction(self, subjet, predicate, object):
         #self.PredicateRestrictions.append((URIPredicate(predicate, object)))
-        test = 1
+        return
+
+    def __str__(self):
+        for u in self.URIIOList:
+            if u is not None:
+                print(u)
+        for p in self.PropertyRestrictions:
+            if p is not None:
+                print(p.name + " - " + str(p.value))
+        return ""
+
+    """
+    ALL FUNCTIONS BELOW THIS LINE WILL EVENTUALLY BE REMOVED AS THEY ARE NO LONGER DESIRED
+    """
 
     def __URIRestrictionListContains__(self, uri):
         for urii in self.URIRestrictions:
@@ -87,35 +100,44 @@ class URIIOCriteria(Criteria):
     def resolve(self):
         toRemove = []
 
+        """
         for uriio in self.URIIOList:
             if not self.__URIRestrictionListContains__(uriio.URI):
                 toRemove.append(uriio)
-
+        """
         if len(self.URIRestrictions) == 0:
-            toRemove.clear()
+            toRemove = []
 
         for uriio in toRemove:
             self.URIIOList.remove(uriio)
 
-        toRemove.clear()
+        toRemove = []
+
+        print("size of the uriio's to check before properties are checked: " + str(len(self.URIIOList)))
 
         for uriio in self.URIIOList:
             if not self.__passesPropertyRestrictionList__(uriio):
                 toRemove.append(uriio)
 
+        print("number of URIIOS to remove: " + str(len(toRemove)))
+
         for uriio in toRemove:
             self.URIIOList.remove(uriio)
 
-        toRemove.clear()
         """
+        toRemove = []
+
         for uriio in self.URIIOList:
             if not self.__passesPredicateRestrictionList__(uriio):
                 toRemove.append(uriio)
-        """
+
         for uriio in toRemove:
             self.URIIOList.remove(uriio)
 
-        toRemove.clear()
+        toRemove = []
+        """
+
+        print("final number of URIIOs that pass: " + str(len(self.URIIOList)))
 
     def getURIIOs(self):
         return self.URIIOList

@@ -90,3 +90,12 @@ class URIIOManager:
         tl = self.asPredicateList()
         for t in tl:
             t.printTriple()
+
+    """
+    @descrtiption returns a string which contains an xml formatted list of all uriios
+    """
+    def uriiosAsXML(self):
+        toret = ""
+        for u in self.URIIOs:
+            toret += u.asXML()
+        return toret

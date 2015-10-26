@@ -23,7 +23,7 @@ class URIIOPredicateManager:
 
     def containsPredicate(self, subject, predicate, object):
         for p in self.predicates:
-            if p.subject == predicate.subject and p.predicate == predicate.predicate and p.object == predicate.object:
+            if p.subject.URI == subject.URI and p.predicate.name == predicate.name and p.object.URI == object.URI:
                 return p
         return None
 
@@ -59,3 +59,13 @@ class URIIOPredicateManager:
             if p.predicate == preddef:
                 predicates.append(p)
         return predicates
+
+    def predicatesAsXML(self):
+        toret = ""
+        for p in self.predicates:
+            toret += "<predicate>"
+            toret += "<subject>" + p.subject.URI + "</subject>"
+            toret += "<predicate>" + p.predicate.name + "</predicate>"
+            toret += "<object>" + p.object.URI + "</object>"
+            toret += "</predicate>"
+        return toret

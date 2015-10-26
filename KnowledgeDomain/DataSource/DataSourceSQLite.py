@@ -11,7 +11,14 @@ class DataSourceSQLite(DataSource):
         self.sourceFile = filename
         self.template = TemplateSQLite()
 
-    def addURIIOS(self, instance, URIIOCriteria, domain):
+    def processPreQueries(self, userBox, criteria, domain):
+        return False
+
+    def processConnectors(self, userBox, criteria, domain):
+        return False
+
+    def extractURIIOs(self, userBox, criteria, domain):
+        instance = userBox.knowledgeInstance
         for table in self.template.tables:
             utype = domain.typeManager.getType(table.type)
             if utype is None:
@@ -28,7 +35,7 @@ class DataSourceSQLite(DataSource):
 
     def getConnection(self):
         try:
-            return lite.connect('/home/jeuna/Downloads/datasources/data.db')
+            return lite.connect(self.sourceFile)
         except ValueError:
             print("SQLLite connection refused")
 

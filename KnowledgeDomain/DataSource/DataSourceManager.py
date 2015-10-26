@@ -10,6 +10,7 @@ class DataSourceManager:
     def addDataSource(self, src):
         self.sources.append(src)
 
+    """
     def getKnowledgeInstance(self, uriioCritera, predicateCriteria, domain):
         instance = KnowledgeInstance(URIIOManager("/tmp/user"), URIIOPredicateManager())
 
@@ -40,3 +41,16 @@ class DataSourceManager:
             src.addPredicates(instance, None, domain)
 
         return instance
+    """
+    def addToKnowledgeInstance(self, userBox, criteria, domain):
+        # first process prequeries
+        for src in self.sources:
+            src.processPreQueries(userBox, criteria, domain)
+
+        # then extract the uriios
+        for src in self.sources:
+            src.extractURIIOs(userBox, criteria, domain)
+
+        # lastly process the connectors (adding relevant predicates and extending certain uriios)
+        for src in self.sources:
+            src.processConnectors(userBox, criteria, domain)
