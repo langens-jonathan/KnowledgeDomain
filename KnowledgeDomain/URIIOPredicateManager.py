@@ -1,5 +1,5 @@
 __author__ = 'jeuna'
-from URIIOPredicate import URIIOPredicate
+
 """
 Copyright (C) 2015  Langens Jonathan
 
